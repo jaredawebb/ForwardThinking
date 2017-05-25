@@ -24,7 +24,7 @@ weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = 1100
-epoch_sequence = [6,5,4]
+epoch_sequence = [6,5,4,3]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
@@ -65,7 +65,7 @@ with tf.Session() as sess:
     
     for i in range(epoch_iter*epoch_sequence[0]):
         batch = mnist.train.next_batch(50)
-        if i%100 == 0:
+        if i%100 == 0 and i > 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
                                                       y_: batch[1]})
             print("step %d, training accuracy %g"%(i, train_accuracy))
@@ -84,17 +84,17 @@ with tf.Session() as sess:
             train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
             if flag:
                 forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
-                flag = False
                 
         train_step.run(feed_dict={x: batch[0], y_: batch[1]})
 
     #print("test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images,
     #                                                  y_: mnist.test.labels}))
     
-        if i % 1100 == 0:
+        if i == 1100:
             weights.append((W_conv1.eval(), b_conv1.eval()))
+            flag = False
     np.save('accuracies_layer1', train_accuracies)
-    
+    print(len(forward_accuracies)) 
 ################ Train the second layer  ######################
 
 train_accuracies = []                                    
@@ -147,7 +147,7 @@ with tf.Session() as sess:
     
     for i in range(epoch_iter*epoch_sequence[1]):
         batch = mnist.train.next_batch(50)
-        if i%100 == 0:
+        if i%100 == 0 and i > 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
                                                       y_: batch[1]})
             print("step %d, training accuracy %g"%(i, train_accuracy))
@@ -165,14 +165,14 @@ with tf.Session() as sess:
             train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
             if flag:
                 forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
-                flag = False
+                
         train_step.run(feed_dict={x: batch[0], y_: batch[1]})
 
-        if i % 1100 == 0:
+        if i == 1100:
             weights.append((W_conv2.eval(), b_conv2.eval()))
             flag = False
     np.save('accuracies_layer2', train_accuracies)
-    
+    print(len(forward_accuracies))
 ################ Train the third layer  ######################
 
 train_accuracies = []
@@ -186,7 +186,6 @@ b_conv1 = tf.constant(weights[0][1])
 
 h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
 h_pool1 = max_pool_2x2(h_conv1)
-
 #######
 
 W_conv2 = tf.constant(weights[1][0])
@@ -196,7 +195,6 @@ h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
 h_pool2 = max_pool_2x2(h_conv2)
 
 #######
-
 W_conv3 = weight_variable([3, 3, 256, 128])
 b_conv3 = bias_variable([128])
 
@@ -233,7 +231,7 @@ with tf.Session() as sess:
     
     for i in range(epoch_iter*epoch_sequence[2]):
         batch = mnist.train.next_batch(50)
-        if i%100 == 0:
+        if i%100 == 0 and i > 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
                                                       y_: batch[1]})
             print("step %d, training accuracy %g"%(i, train_accuracy))
@@ -251,14 +249,14 @@ with tf.Session() as sess:
             train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
             if flag:
                 forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
-                flag = False
+                
         train_step.run(feed_dict={x: batch[0], y_: batch[1]})
 
-        if i % 1100 == 0:
+        if i == 1100:
             weights.append((W_conv3.eval(), b_conv3.eval()))
             flag = False
     np.save('accuracies_layer3', train_accuracies)
-    
+    print(len(forward_accuracies))   
 ################ Train the output layer  ######################
 
 train_accuracies = []
@@ -318,9 +316,9 @@ with tf.Session() as sess:
     num_epochs=3
     sess.run(tf.global_variables_initializer())
     
-    for i in range(epoch_iter*num_epochs):
+    for i in range(epoch_iter*epoch_sequence[3]):
         batch = mnist.train.next_batch(50)
-        if i%100 == 0:
+        if i%100 == 0 and i > 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
                                                       y_: batch[1]})
             print("step %d, training accuracy %g"%(i, train_accuracy))
@@ -336,9 +334,8 @@ with tf.Session() as sess:
             acc10 = accuracy.eval(feed_dict={x: mnist.test.images[9000:], y_: mnist.test.labels[9000:]})
             
             train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
-            if flag:
-                forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
-                flag=False
+            forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+
 
         train_step.run(feed_dict={x: batch[0], y_: batch[1]})
 
@@ -347,7 +344,7 @@ with tf.Session() as sess:
     
     weights.append((W_fc1.eval(), b_fc1.eval()))
     np.save('accuracies_layer4', train_accuracies)
-    
+    print(len(forward_accuracies))
     
 np.save('accuracies', forward_accuracies)
 np.save('weights', weights)
