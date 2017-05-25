@@ -324,7 +324,7 @@ with tf.Session() as sess:
         #if i % 1100 == 0:
         #    weights.append((W_fc1.eval(), b_fc1.eval()))
     
-    weights.append((W_fc1.eval(), b_fc1.eval())
+    weights.append((W_fc1.eval(), b_fc1.eval()))
     np.save('accuracies_layer4', train_accuracies)
     
     
