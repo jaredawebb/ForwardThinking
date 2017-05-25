@@ -316,7 +316,7 @@ with tf.Session() as sess:
 
         train_step.run(feed_dict={x: batch[0], y_: batch[1]})
     
-    weights.append((W_fc1.eval(), b_fc1.eval())
+    weights.append((W_fc1.eval(), b_fc1.eval()))
     np.save('p_accuracies_layer4', train_accuracies)
     
     
