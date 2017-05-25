@@ -24,6 +24,7 @@ weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = 1100
+epoch_sequence = [6,5,4]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
@@ -62,7 +63,7 @@ flag = True
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for i in range(epoch_iter*6):
+    for i in range(epoch_iter*epoch_sequence[0]):
         batch = mnist.train.next_batch(50)
         if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
@@ -139,7 +140,7 @@ flag = True
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for i in range(epoch_iter*5):
+    for i in range(epoch_iter*epoch_sequence[1]):
         batch = mnist.train.next_batch(50)
         if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
@@ -220,7 +221,7 @@ flag = True
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for i in range(epoch_iter*4):
+    for i in range(epoch_iter*epoch_sequence[2]):
         batch = mnist.train.next_batch(50)
         if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
@@ -322,8 +323,10 @@ with tf.Session() as sess:
 
         #if i % 1100 == 0:
         #    weights.append((W_fc1.eval(), b_fc1.eval()))
-            
+    
+    weights.append((W_fc1.eval(), b_fc1.eval())
     np.save('accuracies_layer4', train_accuracies)
     
     
 np.save('accuracies', forward_accuracies)
+np.save('weights', weights)
