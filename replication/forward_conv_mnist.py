@@ -1,6 +1,10 @@
 import tensorflow as tf
 import numpy as np
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
 
@@ -68,12 +72,15 @@ with tf.Session() as sess:
                                                       y_: batch[1]})
             print("step %d, training accuracy %g"%(i, train_accuracy))
             
-            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:5000], y_: mnist.test.labels[:5000]})
-            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[5000:], y_: mnist.test.labels[5000:]})
+            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:1000], y_: mnist.test.labels[:1000]})
+            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[1000:2000], y_: mnist.test.labels[1000:2000]})
+            acc3 = accuracy.eval(feed_dict={x: mnist.test.images[2000:3000], y_: mnist.test.labels[2000:3000]})
+            acc4 = accuracy.eval(feed_dict={x: mnist.test.images[3000:4000], y_: mnist.test.labels[3000:4000]})
+            acc5 = accuracy.eval(feed_dict={x: mnist.test.images[4000:], y_: mnist.test.labels[4000:]})
             
-            train_accuracies.append(np.mean([acc1, acc2]))
+            train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5]))
             if flag:
-                forward_accuracies.append(np.mean([acc1, acc2]))
+                forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5]))
                 flag = False
                 
         train_step.run(feed_dict={x: batch[0], y_: batch[1]})
@@ -141,12 +148,16 @@ with tf.Session() as sess:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
                                                       y_: batch[1]})
             print("step %d, training accuracy %g"%(i, train_accuracy))
-            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:5000], y_: mnist.test.labels[:5000]})
-            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[5000:], y_: mnist.test.labels[5000:]})
+            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:1000], y_: mnist.test.labels[:1000]})
+            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[1000:2000], y_: mnist.test.labels[1000:2000]})
+            acc3 = accuracy.eval(feed_dict={x: mnist.test.images[2000:3000], y_: mnist.test.labels[2000:3000]})
+            acc4 = accuracy.eval(feed_dict={x: mnist.test.images[3000:4000], y_: mnist.test.labels[3000:4000]})
+            acc5 = accuracy.eval(feed_dict={x: mnist.test.images[4000:], y_: mnist.test.labels[4000:]})
             
-            train_accuracies.append(np.mean([acc1, acc2]))
+            train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5]))
             if flag:
-                forward_accuracies.append(np.mean([acc1, acc2]))
+                forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5]))
+                flag = False
         train_step.run(feed_dict={x: batch[0], y_: batch[1]})
 
         if i % 1100 == 0:
@@ -218,12 +229,16 @@ with tf.Session() as sess:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
                                                       y_: batch[1]})
             print("step %d, training accuracy %g"%(i, train_accuracy))
-            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:5000], y_: mnist.test.labels[:5000]})
-            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[5000:], y_: mnist.test.labels[5000:]})
+            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:1000], y_: mnist.test.labels[:1000]})
+            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[1000:2000], y_: mnist.test.labels[1000:2000]})
+            acc3 = accuracy.eval(feed_dict={x: mnist.test.images[2000:3000], y_: mnist.test.labels[2000:3000]})
+            acc4 = accuracy.eval(feed_dict={x: mnist.test.images[3000:4000], y_: mnist.test.labels[3000:4000]})
+            acc5 = accuracy.eval(feed_dict={x: mnist.test.images[4000:], y_: mnist.test.labels[4000:]})
             
-            train_accuracies.append(np.mean([acc1, acc2]))
+            train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5]))
             if flag:
-                forward_accuracies.append(np.mean([acc1, acc2]))
+                forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5]))
+                flag = False
         train_step.run(feed_dict={x: batch[0], y_: batch[1]})
 
         if i % 1100 == 0:
@@ -296,12 +311,16 @@ with tf.Session() as sess:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
                                                       y_: batch[1]})
             print("step %d, training accuracy %g"%(i, train_accuracy))
-            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:5000], y_: mnist.test.labels[:5000]})
-            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[5000:], y_: mnist.test.labels[5000:]})
+            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:1000], y_: mnist.test.labels[:1000]})
+            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[1000:2000], y_: mnist.test.labels[1000:2000]})
+            acc3 = accuracy.eval(feed_dict={x: mnist.test.images[2000:3000], y_: mnist.test.labels[2000:3000]})
+            acc4 = accuracy.eval(feed_dict={x: mnist.test.images[3000:4000], y_: mnist.test.labels[3000:4000]})
+            acc5 = accuracy.eval(feed_dict={x: mnist.test.images[4000:], y_: mnist.test.labels[4000:]})
             
-            train_accuracies.append(np.mean([acc1, acc2]))
+            train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5]))
             if flag:
-                forward_accuracies.append(np.mean([acc1, acc2]))
+                forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5]))
+
         train_step.run(feed_dict={x: batch[0], y_: batch[1]})
 
         #if i % 1100 == 0:
