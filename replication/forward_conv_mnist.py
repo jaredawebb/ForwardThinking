@@ -23,6 +23,7 @@ def max_pool_2x2(x):
 weights = []
 train_accuracies = []
 forward_accuracies = []
+epoch_iter = 1100
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
@@ -61,7 +62,7 @@ flag = True
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for i in range(1100*6):
+    for i in range(epoch_iter*6):
         batch = mnist.train.next_batch(50)
         if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
@@ -138,7 +139,7 @@ flag = True
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for i in range(1100*5):
+    for i in range(epoch_iter*5):
         batch = mnist.train.next_batch(50)
         if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
@@ -219,7 +220,7 @@ flag = True
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for i in range(1100*4):
+    for i in range(epoch_iter*4):
         batch = mnist.train.next_batch(50)
         if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
@@ -301,7 +302,7 @@ with tf.Session() as sess:
     num_epochs=3
     sess.run(tf.global_variables_initializer())
     
-    for i in range(1100*num_epochs):
+    for i in range(epoch_iter*num_epochs):
         batch = mnist.train.next_batch(50)
         if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
