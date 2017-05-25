@@ -38,7 +38,7 @@ h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
 h_pool1 = max_pool_2x2(h_conv1)
 
 flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
-
+print(flat_dim)
 W_fc1 = weight_variable([flat_dim, 150])
 b_fc1 = bias_variable([150])
 
