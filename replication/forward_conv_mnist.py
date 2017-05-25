@@ -24,6 +24,7 @@ weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = 1100
+#epoch_sequence = [1,1,1]
 epoch_sequence = [6,5,4]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
@@ -324,12 +325,9 @@ with tf.Session() as sess:
         #if i % 1100 == 0:
         #    weights.append((W_fc1.eval(), b_fc1.eval()))
     
-    weights.append((W_fc1.eval(), b_fc1.eval())
+    weights.append((W_fc1.eval(), b_fc1.eval()))
     np.save('accuracies_layer4', train_accuracies)
     
     
 np.save('accuracies', forward_accuracies)
-<<<<<<< HEAD
-=======
 np.save('weights', weights)
->>>>>>> e74993b0780c438752e5d4173eb5282734e31055
