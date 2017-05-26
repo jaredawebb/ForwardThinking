@@ -19,10 +19,10 @@ def max_pool_2x2(x):
   return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                         strides=[1, 2, 2, 1], padding='SAME')
 
-weights = np.load('weights.npy')
+weights = np.load('weights.npy', encoding='latin1')
 
 ################ Train the first layer  ######################
-#weights = []
+new_weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = 1100
@@ -93,7 +93,7 @@ with tf.Session() as sess:
     #                                                  y_: mnist.test.labels}))
     
         if i == 1100:
-            weights.append((W_conv1.eval(), b_conv1.eval()))
+            new_weights.append((W_conv1.eval(), b_conv1.eval()))
             flag = False
     np.save('p_accuracies_layer1', train_accuracies)
     
@@ -171,7 +171,7 @@ with tf.Session() as sess:
         train_step.run(feed_dict={x: batch[0], y_: batch[1]})
 
         if i == 1100:
-            weights.append((W_conv2.eval(), b_conv2.eval()))
+            new_weights.append((W_conv2.eval(), b_conv2.eval()))
             flag = False
     np.save('p_accuracies_layer2', train_accuracies)
     
@@ -257,7 +257,7 @@ with tf.Session() as sess:
         train_step.run(feed_dict={x: batch[0], y_: batch[1]})
 
         if i == 1100:
-            weights.append((W_conv3.eval(), b_conv3.eval()))
+            new_weights.append((W_conv3.eval(), b_conv3.eval()))
             flag = False
     np.save('p_accuracies_layer3', train_accuracies)
     
@@ -346,8 +346,9 @@ with tf.Session() as sess:
         #if i % 1100 == 0:
         #    weights.append((W_fc1.eval(), b_fc1.eval()))
     
-    weights.append((W_fc1.eval(), b_fc1.eval()))
+    new_weights.append((W_fc1.eval(), b_fc1.eval()))
     np.save('p_accuracies_layer4', train_accuracies)
     
     
 np.save('p_accuracies', forward_accuracies)
+np.save('new_weights', new_weights)
