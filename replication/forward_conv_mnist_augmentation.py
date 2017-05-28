@@ -38,7 +38,7 @@ weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = 1100
-epoch_sequence = [6,5,4,3]
+epoch_sequence = [1,1,98,97]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
@@ -272,6 +272,7 @@ with tf.Session() as sess:
             flag = False
     np.save('accuracies_layer3_aug', train_accuracies)
     print(len(forward_accuracies))   
+'''
 ################ Train the output layer  ######################
 
 train_accuracies = []
@@ -360,6 +361,6 @@ with tf.Session() as sess:
     weights.append((W_fc1.eval(), b_fc1.eval()))
     np.save('accuracies_layer4_aug', train_accuracies)
     print(len(forward_accuracies))
-    
+'''    
 np.save('accuracies_aug', forward_accuracies)
 np.save('weights_aug', weights)
