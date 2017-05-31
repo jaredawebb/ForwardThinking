@@ -105,7 +105,7 @@ with tf.Session() as sess:
     #print("test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images,
     #                                                  y_: mnist.test.labels}))
     
-        if i == 1100:
+        if i == 1099:
             weights.append((W_conv1.eval(), b_conv1.eval()))
             flag = False
     np.save('accuracies_layer1_aug', train_accuracies)
@@ -183,7 +183,7 @@ with tf.Session() as sess:
                 
         train_step.run(feed_dict={x: batch[0].reshape((50,784)), y_: batch[1]})
 
-        if i == 1100:
+        if i == 1099:
             weights.append((W_conv2.eval(), b_conv2.eval()))
             flag = False
     np.save('accuracies_layer2_aug', train_accuracies)
