@@ -70,7 +70,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 y_conv_drop = tf.nn.dropout(y_conv, 0.5)
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
-train_step = tf.train.AdamOptimizer(1e-4, learning_rate=0.002).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(0.002).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -107,7 +107,7 @@ with tf.Session() as sess:
     #print("test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images,
     #                                                  y_: mnist.test.labels}))
     
-        if i == 1100:
+        if i == 1099:
             weights.append((W_conv1.eval(), b_conv1.eval()))
             flag = False
     np.save('accuracies_layer1_aug', train_accuracies)
@@ -154,7 +154,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 y_conv_drop = tf.nn.dropout(y_conv, 0.5)
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
-train_step = tf.train.AdamOptimizer(1e-4, learning_rate=0.002).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(0.002).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -185,7 +185,7 @@ with tf.Session() as sess:
                 
         train_step.run(feed_dict={x: batch[0].reshape((50,784)), y_: batch[1]})
 
-        if i == 1100:
+        if i == 1099:
             weights.append((W_conv2.eval(), b_conv2.eval()))
             flag = False
     np.save('accuracies_layer2_aug', train_accuracies)
@@ -238,7 +238,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 y_conv_drop = tf.nn.dropout(y_conv, 0.5)
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
-train_step = tf.train.AdamOptimizer(1e-4, learning_rate=0.0001).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(0.0001).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -269,7 +269,7 @@ with tf.Session() as sess:
                 
         train_step.run(feed_dict={x: batch[0].reshape((50,784)), y_: batch[1]})
 
-        if i == 1100:
+        if i == 1099:
             weights.append((W_conv3.eval(), b_conv3.eval()))
             flag = False
     np.save('accuracies_layer3_aug', train_accuracies)
