@@ -34,6 +34,7 @@ datagen.fit(x_train)
 images = datagen.flow(x_train, mnist.train.labels, batch_size=50)
 
 ################ Train the first layer  ######################
+
 weights = []
 train_accuracies = []
 forward_accuracies = []
@@ -85,6 +86,7 @@ with tf.Session() as sess:
                                                       y_: batch[1]})
             print("step %d, training accuracy %g"%(i, train_accuracy))
             
+            # For RAMs sake
             acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:1000], y_: mnist.test.labels[:1000]})
             acc2 = accuracy.eval(feed_dict={x: mnist.test.images[1000:2000], y_: mnist.test.labels[1000:2000]})
             acc3 = accuracy.eval(feed_dict={x: mnist.test.images[2000:3000], y_: mnist.test.labels[2000:3000]})
