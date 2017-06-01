@@ -30,5 +30,8 @@ for i in range(epochs):
 xgb = xgboost.XGBClassifier(objective='multi:softmax')
 xgb.fit(images_train, np.argmax(images_labels, axis=1))
 
-yhat = xgb.predict(mnist.train.images)
-np.save(yhat, 'prediction')
+yhat = xgb.predict(mnist.test.images)
+accuracy = (yhat == np.argmax(mnist.test.labels, axis=1))
+accuracy = sum(accuracy)/len(accuracy)
+np.save('prediction', yhat)
+np.save('accuracy', accuracy)
