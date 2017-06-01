@@ -1,6 +1,8 @@
 import tensorflow as tf
 import numpy as np
 
+# ToDo:  Save output layer once third layer is trained
+
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
 
@@ -106,7 +108,7 @@ with tf.Session() as sess:
     #                                                  y_: mnist.test.labels}))
     
         if i == epoch_iter-1:
-            weights.append((W_conv1.eval(), b_conv1.eval()))
+            weights.append([W_conv1.eval(), b_conv1.eval()])
             flag = False
     np.save('accuracies_layer1_aug', train_accuracies)
     print(len(forward_accuracies)) 
@@ -184,7 +186,7 @@ with tf.Session() as sess:
         train_step.run(feed_dict={x: batch[0].reshape((50,784)), y_: batch[1]})
 
         if i == epoch_iter-1:
-            weights.append((W_conv2.eval(), b_conv2.eval()))
+            weights.append([W_conv2.eval(), b_conv2.eval()])
             flag = False
     np.save('accuracies_layer2_aug', train_accuracies)
     print(len(forward_accuracies))
@@ -268,7 +270,8 @@ with tf.Session() as sess:
         train_step.run(feed_dict={x: batch[0].reshape((50,784)), y_: batch[1]})
 
         if i == epoch_iter-1:
-            weights.append((W_conv3.eval(), b_conv3.eval()))
+            weights.append([W_conv3.eval(), b_conv3.eval()])
+            weights.append([W_fc1.eval(), b_fc1.eval()])
             flag = False
     np.save('accuracies_layer3_aug', train_accuracies)
     print(len(forward_accuracies))
