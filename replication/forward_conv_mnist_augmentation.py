@@ -21,7 +21,7 @@ def max_pool_2x2(x):
 
 from keras.preprocessing.image import ImageDataGenerator
 
-batch_size = 50
+batch_size = 128
 datagen = ImageDataGenerator(
     rotation_range=7,  # randomly rotate images in the range (degrees, 0 to 180)
     width_shift_range=0.05,  # randomly shift images horizontally (fraction of total width)

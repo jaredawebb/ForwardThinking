@@ -272,6 +272,7 @@ with tf.Session() as sess:
         if i == epoch_iter-1:
             weights.append([W_conv3.eval(), b_conv3.eval()])
             weights.append([W_fc1.eval(), b_fc1.eval()])
+            weights.append([W_fc2.eval(), b_fc2.eval()])
             flag = False
     np.save('accuracies_layer3_aug', train_accuracies)
     print(len(forward_accuracies))
@@ -290,7 +291,24 @@ for i in range(gibbs_epochs):
         gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist)
     elif i % 3 == 2:
         gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist)
-        
+    #ielif i % 9 == 3:
+    #    gibbs_utils.layer_4(weights, images, forward_accuracies, epoch_iter, mnist)       
+    #elif i % 9 == 4:
+    #    gibbs_utils.layer_5(weights, images, forward_accuracies, epoch_iter, mnist)
+    #elif i % 9 == 5:
+    #    gibbs_utils.layer_4(weights, images, forward_accuracies, epoch_iter, mnist)
+    #elif i % 9 == 6:
+    #    gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist)
+    #elif i % 9 == 7:
+    #    gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist)
+    #elif i % 9 == 8:
+    #    gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist)       
+
+gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=77)
+
+print(forward_accuracies[-10:])
+print(np.mean(forward_accuracies[-10:]))
+
 np.save('accuracies_gibbs', forward_accuracies)
 np.save('weights_gibbs', weights)
     
