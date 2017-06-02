@@ -21,7 +21,7 @@ def max_pool_2x2(x):
 
 from keras.preprocessing.image import ImageDataGenerator
 
-batch_size = 128
+batch_size = 50
 datagen = ImageDataGenerator(
     rotation_range=7,  # randomly rotate images in the range (degrees, 0 to 180)
     width_shift_range=0.05,  # randomly shift images horizontally (fraction of total width)
@@ -71,7 +71,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 y_conv_drop = tf.nn.dropout(y_conv, 0.5)
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
-train_step = tf.train.AdamOptimizer(0.002).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(0.005).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -155,7 +155,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 y_conv_drop = tf.nn.dropout(y_conv, 0.5)
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
-train_step = tf.train.AdamOptimizer(0.002).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(0.005).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -241,7 +241,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 y_conv_drop = tf.nn.dropout(y_conv, 0.5)
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
-train_step = tf.train.AdamOptimizer(0.0001).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(0.005).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -249,7 +249,7 @@ flag = True
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for i in range(epoch_iter*epoch_sequence[2]):
+    for i in range(epoch_iter):
         batch = images.next()
         if i%100 == 0 and i > 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((batch_size, 784)), 
@@ -274,6 +274,168 @@ with tf.Session() as sess:
 
         if i == 1099:
             weights.append((W_conv3.eval(), b_conv3.eval()))
+
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+train_step = tf.train.AdamOptimizer(0.002).minimize(cross_entropy)
+correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+flag = True
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    
+    for i in range(epoch_iter*10):
+        batch = images.next()
+        if i%100 == 0 and i > 0:
+            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((batch_size, 784)), 
+                                                      y_: batch[1]})
+            print("step %d, training accuracy %g"%(i, train_accuracy))
+            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:1000], y_: mnist.test.labels[:1000]})
+            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[1000:2000], y_: mnist.test.labels[1000:2000]})
+            acc3 = accuracy.eval(feed_dict={x: mnist.test.images[2000:3000], y_: mnist.test.labels[2000:3000]})
+            acc4 = accuracy.eval(feed_dict={x: mnist.test.images[3000:4000], y_: mnist.test.labels[3000:4000]})
+            acc5 = accuracy.eval(feed_dict={x: mnist.test.images[4000:5000], y_: mnist.test.labels[4000:5000]})
+            acc6 = accuracy.eval(feed_dict={x: mnist.test.images[5000:6000], y_: mnist.test.labels[5000:6000]})
+            acc7 = accuracy.eval(feed_dict={x: mnist.test.images[6000:7000], y_: mnist.test.labels[6000:7000]})
+            acc8 = accuracy.eval(feed_dict={x: mnist.test.images[7000:8000], y_: mnist.test.labels[7000:8000]})
+            acc9 = accuracy.eval(feed_dict={x: mnist.test.images[8000:9000], y_: mnist.test.labels[8000:9000]})
+            acc10 = accuracy.eval(feed_dict={x: mnist.test.images[9000:], y_: mnist.test.labels[9000:]})
+            
+            train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+            if flag:
+                forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+                
+        train_step.run(feed_dict={x: batch[0].reshape((batch_size,784)), y_: batch[1]})
+
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+train_step = tf.train.AdamOptimizer(0.001).minimize(cross_entropy)
+correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+flag = True
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    
+    for i in range(epoch_iter*20):
+        batch = images.next()
+        if i%100 == 0 and i > 0:
+            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((batch_size, 784)), 
+                                                      y_: batch[1]})
+            print("step %d, training accuracy %g"%(i, train_accuracy))
+            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:1000], y_: mnist.test.labels[:1000]})
+            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[1000:2000], y_: mnist.test.labels[1000:2000]})
+            acc3 = accuracy.eval(feed_dict={x: mnist.test.images[2000:3000], y_: mnist.test.labels[2000:3000]})
+            acc4 = accuracy.eval(feed_dict={x: mnist.test.images[3000:4000], y_: mnist.test.labels[3000:4000]})
+            acc5 = accuracy.eval(feed_dict={x: mnist.test.images[4000:5000], y_: mnist.test.labels[4000:5000]})
+            acc6 = accuracy.eval(feed_dict={x: mnist.test.images[5000:6000], y_: mnist.test.labels[5000:6000]})
+            acc7 = accuracy.eval(feed_dict={x: mnist.test.images[6000:7000], y_: mnist.test.labels[6000:7000]})
+            acc8 = accuracy.eval(feed_dict={x: mnist.test.images[7000:8000], y_: mnist.test.labels[7000:8000]})
+            acc9 = accuracy.eval(feed_dict={x: mnist.test.images[8000:9000], y_: mnist.test.labels[8000:9000]})
+            acc10 = accuracy.eval(feed_dict={x: mnist.test.images[9000:], y_: mnist.test.labels[9000:]})
+            
+            train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+            if flag:
+                forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+                
+        train_step.run(feed_dict={x: batch[0].reshape((batch_size,784)), y_: batch[1]})
+
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+train_step = tf.train.AdamOptimizer(0.0005).minimize(cross_entropy)
+correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+flag = True
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    
+    for i in range(epoch_iter*20):
+        batch = images.next()
+        if i%100 == 0 and i > 0:
+            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((batch_size, 784)), 
+                                                      y_: batch[1]})
+            print("step %d, training accuracy %g"%(i, train_accuracy))
+            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:1000], y_: mnist.test.labels[:1000]})
+            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[1000:2000], y_: mnist.test.labels[1000:2000]})
+            acc3 = accuracy.eval(feed_dict={x: mnist.test.images[2000:3000], y_: mnist.test.labels[2000:3000]})
+            acc4 = accuracy.eval(feed_dict={x: mnist.test.images[3000:4000], y_: mnist.test.labels[3000:4000]})
+            acc5 = accuracy.eval(feed_dict={x: mnist.test.images[4000:5000], y_: mnist.test.labels[4000:5000]})
+            acc6 = accuracy.eval(feed_dict={x: mnist.test.images[5000:6000], y_: mnist.test.labels[5000:6000]})
+            acc7 = accuracy.eval(feed_dict={x: mnist.test.images[6000:7000], y_: mnist.test.labels[6000:7000]})
+            acc8 = accuracy.eval(feed_dict={x: mnist.test.images[7000:8000], y_: mnist.test.labels[7000:8000]})
+            acc9 = accuracy.eval(feed_dict={x: mnist.test.images[8000:9000], y_: mnist.test.labels[8000:9000]})
+            acc10 = accuracy.eval(feed_dict={x: mnist.test.images[9000:], y_: mnist.test.labels[9000:]})
+            
+            train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+            if flag:
+                forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+                
+        train_step.run(feed_dict={x: batch[0].reshape((batch_size,784)), y_: batch[1]})
+
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+train_step = tf.train.AdamOptimizer(0.0001).minimize(cross_entropy)
+correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+flag = True
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    
+    for i in range(epoch_iter*20):
+        batch = images.next()
+        if i%100 == 0 and i > 0:
+            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((batch_size, 784)), 
+                                                      y_: batch[1]})
+            print("step %d, training accuracy %g"%(i, train_accuracy))
+            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:1000], y_: mnist.test.labels[:1000]})
+            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[1000:2000], y_: mnist.test.labels[1000:2000]})
+            acc3 = accuracy.eval(feed_dict={x: mnist.test.images[2000:3000], y_: mnist.test.labels[2000:3000]})
+            acc4 = accuracy.eval(feed_dict={x: mnist.test.images[3000:4000], y_: mnist.test.labels[3000:4000]})
+            acc5 = accuracy.eval(feed_dict={x: mnist.test.images[4000:5000], y_: mnist.test.labels[4000:5000]})
+            acc6 = accuracy.eval(feed_dict={x: mnist.test.images[5000:6000], y_: mnist.test.labels[5000:6000]})
+            acc7 = accuracy.eval(feed_dict={x: mnist.test.images[6000:7000], y_: mnist.test.labels[6000:7000]})
+            acc8 = accuracy.eval(feed_dict={x: mnist.test.images[7000:8000], y_: mnist.test.labels[7000:8000]})
+            acc9 = accuracy.eval(feed_dict={x: mnist.test.images[8000:9000], y_: mnist.test.labels[8000:9000]})
+            acc10 = accuracy.eval(feed_dict={x: mnist.test.images[9000:], y_: mnist.test.labels[9000:]})
+            
+            train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+            if flag:
+                forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+                
+        train_step.run(feed_dict={x: batch[0].reshape((batch_size,784)), y_: batch[1]})
+
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+train_step = tf.train.AdamOptimizer(0.00005).minimize(cross_entropy)
+correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+flag = True
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    
+    for i in range(epoch_iter*20):
+        batch = images.next()
+        if i%100 == 0 and i > 0:
+            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((batch_size, 784)), 
+                                                      y_: batch[1]})
+            print("step %d, training accuracy %g"%(i, train_accuracy))
+            acc1 = accuracy.eval(feed_dict={x: mnist.test.images[:1000], y_: mnist.test.labels[:1000]})
+            acc2 = accuracy.eval(feed_dict={x: mnist.test.images[1000:2000], y_: mnist.test.labels[1000:2000]})
+            acc3 = accuracy.eval(feed_dict={x: mnist.test.images[2000:3000], y_: mnist.test.labels[2000:3000]})
+            acc4 = accuracy.eval(feed_dict={x: mnist.test.images[3000:4000], y_: mnist.test.labels[3000:4000]})
+            acc5 = accuracy.eval(feed_dict={x: mnist.test.images[4000:5000], y_: mnist.test.labels[4000:5000]})
+            acc6 = accuracy.eval(feed_dict={x: mnist.test.images[5000:6000], y_: mnist.test.labels[5000:6000]})
+            acc7 = accuracy.eval(feed_dict={x: mnist.test.images[6000:7000], y_: mnist.test.labels[6000:7000]})
+            acc8 = accuracy.eval(feed_dict={x: mnist.test.images[7000:8000], y_: mnist.test.labels[7000:8000]})
+            acc9 = accuracy.eval(feed_dict={x: mnist.test.images[8000:9000], y_: mnist.test.labels[8000:9000]})
+            acc10 = accuracy.eval(feed_dict={x: mnist.test.images[9000:], y_: mnist.test.labels[9000:]})
+            
+            train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+            if flag:
+                forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+                
+        train_step.run(feed_dict={x: batch[0].reshape((batch_size,784)), y_: batch[1]})
+
+
     np.save('accuracies_layer3_aug', train_accuracies)
     print(len(forward_accuracies))   
 '''
