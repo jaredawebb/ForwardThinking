@@ -66,7 +66,7 @@ weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = len(x_train) // batch_size
-epoch_sequence = [1,1,98]
+epoch_sequence = [100,99,98]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
@@ -87,49 +87,56 @@ b_fc1 = bias_variable([150])
 h_pool1_flat = tf.reshape(h_pool1, [-1, flat_dim])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool1_flat, W_fc1) + b_fc1)
 
-h_fc1_drop = tf.nn.dropout(h_fc1, 0.3)
+keep_prob1 = tf.placeholder(tf.float32, shape=[])
+h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
 W_fc2 = weight_variable([150, 10])
 b_fc2 = bias_variable([10])
 
 y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-y_conv_drop = tf.nn.dropout(y_conv, 0.5)
+keep_prob2 = tf.placeholder(tf.float32, shape=[])
+y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
+learning_rate = tf.placeholder(tf.float32, shape=[])
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
-train_step = tf.train.AdamOptimizer(0.005).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
+
 flag = True
+lr = learning_rates[0]
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for i in range(epoch_iter*epoch_sequence[0]):
-        # batch = mnist.train.next_batch(50)
+    for i in range(epoch_iter*epoch_sequence[2]):
         batch = images.next()
         if i%100 == 0 and i > 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
-                                                      y_: batch[1]})
+                                                      y_: batch[1],
+                                                      learning_rate: lr,
+                                                      keep_prob1: 1., 
+                                                      keep_prob2: 1.})
             print("step %d, training accuracy %g"%(i, train_accuracy))
-            
-            # For RAMs sake
-            acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000]})
-            acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000]})
-            acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000].reshape((1000, 784)), y_: y_test[2000:3000]})
-            acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000].reshape((1000, 784)), y_: y_test[3000:4000]})
-            acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000].reshape((1000, 784)), y_: y_test[4000:5000]})
-            acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000].reshape((1000, 784)), y_: y_test[5000:6000]})
-            acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000].reshape((1000, 784)), y_: y_test[6000:7000]})
-            acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000].reshape((1000, 784)), y_: y_test[7000:8000]})
-            acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000]})
-            acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:]})
+            acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1.})
+            acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1.})
+            acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000].reshape((1000, 784)), y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1.})
+            acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000].reshape((1000, 784)), y_: y_test[3000:4000], keep_prob1:1., keep_prob2:1.})
+            acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000].reshape((1000, 784)), y_: y_test[4000:5000], keep_prob1:1., keep_prob2:1.})
+            acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000].reshape((1000, 784)), y_: y_test[5000:6000], keep_prob1:1., keep_prob2:1.})
+            acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000].reshape((1000, 784)), y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1.})
+            acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000].reshape((1000, 784)), y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1.})
+            acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1.})
+            acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1.})
             
             train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
             if flag:
                 forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
                 
-        train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1]})
+        train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1], learning_rate: lr,
+                                  keep_prob1=0.3, keep_prob2=0.5})
 
     #print("test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images,
     #                                                  y_: mnist.test.labels}))
@@ -171,47 +178,87 @@ b_fc1 = bias_variable([150])
 h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
-h_fc1_drop = tf.nn.dropout(h_fc1, 0.3)
+keep_prob1 = tf.placeholder(tf.float32, shape=[])
+h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
 W_fc2 = weight_variable([150, 10])
 b_fc2 = bias_variable([10])
 
 y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-y_conv_drop = tf.nn.dropout(y_conv, 0.5)
+keep_prob2 = tf.placeholder(tf.float32, shape=[])
+y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
+learning_rate = tf.placeholder(tf.float32, shape=[])
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
-train_step = tf.train.AdamOptimizer(0.005).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
+
 flag = True
+lr = learning_rates[0]
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for i in range(epoch_iter*epoch_sequence[1]):
+    for i in range(epoch_iter*epoch_sequence[2]):
         batch = images.next()
         if i%100 == 0 and i > 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
-                                                      y_: batch[1]})
+                                                      y_: batch[1],
+                                                      learning_rate: lr,
+                                                      keep_prob1: 1., 
+                                                      keep_prob2: 1.})
             print("step %d, training accuracy %g"%(i, train_accuracy))
-            acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000]})
-            acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000]})
-            acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000].reshape((1000, 784)), y_: y_test[2000:3000]})
-            acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000].reshape((1000, 784)), y_: y_test[3000:4000]})
-            acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000].reshape((1000, 784)), y_: y_test[4000:5000]})
-            acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000].reshape((1000, 784)), y_: y_test[5000:6000]})
-            acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000].reshape((1000, 784)), y_: y_test[6000:7000]})
-            acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000].reshape((1000, 784)), y_: y_test[7000:8000]})
-            acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000]})
-            acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:]})
+            acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1.})
+            acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1.})
+            acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000].reshape((1000, 784)), y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1.})
+            acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000].reshape((1000, 784)), y_: y_test[3000:4000], keep_prob1:1., keep_prob2:1.})
+            acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000].reshape((1000, 784)), y_: y_test[4000:5000], keep_prob1:1., keep_prob2:1.})
+            acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000].reshape((1000, 784)), y_: y_test[5000:6000], keep_prob1:1., keep_prob2:1.})
+            acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000].reshape((1000, 784)), y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1.})
+            acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000].reshape((1000, 784)), y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1.})
+            acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1.})
+            acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1.})
             
             train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
             if flag:
                 forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
                 
-        train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1]})
+        train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1], learning_rate: lr,
+                                  keep_prob1=0.3, keep_prob2=0.5})
 
+        if i == epoch_iter*2:
+            lr = learning_rates[1]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[1]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
+        elif i == epoch_iter*10:
+            lr = learning_rates[2]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[2]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
+        elif i == epoch_iter*40:
+            lr = learning_rates[3]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[3]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
+        elif i == epoch_iter*60:
+            lr = learning_rates[4]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[4]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
+        elif i == epoch_iter*80:
+            lr = learning_rates[5]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[5]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+        
         if i == (epoch_iter - 1):
             weights.append((W_conv2.eval(), b_conv2.eval()))
             flag = False
@@ -287,8 +334,8 @@ with tf.Session() as sess:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
                                                       learning_rate: lr,
-                                                      keep_prob1: 0.3, 
-                                                      keep_prob2: 0.5})
+                                                      keep_prob1: 1., 
+                                                      keep_prob2: 1.})
             print("step %d, training accuracy %g"%(i, train_accuracy))
             acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1.})
             acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1.})
