@@ -136,7 +136,7 @@ with tf.Session() as sess:
                 forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
                 
         train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1], learning_rate: lr,
-                                  keep_prob1=0.3, keep_prob2=0.5})
+                                  keep_prob1:0.3, keep_prob2:0.5})
 
     #print("test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images,
     #                                                  y_: mnist.test.labels}))
@@ -227,7 +227,7 @@ with tf.Session() as sess:
                 forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
                 
         train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1], learning_rate: lr,
-                                  keep_prob1=0.3, keep_prob2=0.5})
+                                  keep_prob1:0.3, keep_prob2:0.5})
 
         if i == epoch_iter*2:
             lr = learning_rates[1]
