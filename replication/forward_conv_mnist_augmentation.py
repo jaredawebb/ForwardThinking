@@ -66,7 +66,7 @@ weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = len(x_train) // batch_size
-epoch_sequence = [1,1,98]
+epoch_sequence = [100,99,98]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
@@ -134,7 +134,7 @@ with tf.Session() as sess:
     #print("test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images,
     #                                                  y_: mnist.test.labels}))
     
-       if i == epoch_iter-1:
+        if i == epoch_iter-1:
             weights.append((W_conv1.eval(), b_conv1.eval()))
             flag = False
     np.save('accuracies_layer1_aug', train_accuracies)
@@ -212,7 +212,7 @@ with tf.Session() as sess:
                 
         train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1]})
 
-       if i == (epoch_iter - 1):
+        if i == (epoch_iter - 1):
             weights.append((W_conv2.eval(), b_conv2.eval()))
             flag = False
     np.save('accuracies_layer2_aug', train_accuracies)
@@ -306,7 +306,7 @@ with tf.Session() as sess:
                 forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
                 
         train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1], learning_rate: lr,
-                                  keep_prob1=0.3, keep_prob2=0.5})
+                                  keep_prob1:0.3, keep_prob2:0.5})
 
         if i == epoch_iter*2:
             lr = learning_rates[1]
