@@ -6,6 +6,7 @@ import numpy as np
 
 from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
+from keras import backend as K
 
 def weight_variable(shape):
   initial = tf.truncated_normal(shape, stddev=0.1)
