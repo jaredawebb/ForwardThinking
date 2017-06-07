@@ -138,6 +138,36 @@ with tf.Session() as sess:
         train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1], learning_rate: lr,
                                   keep_prob1:0.3, keep_prob2:0.5})
 
+        if i == epoch_iter*2:
+            lr = learning_rates[1]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[1]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
+        elif i == epoch_iter*10:
+            lr = learning_rates[2]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[2]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
+        elif i == epoch_iter*40:
+            lr = learning_rates[3]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[3]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
+        elif i == epoch_iter*60:
+            lr = learning_rates[4]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[4]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
+        elif i == epoch_iter*80:
+            lr = learning_rates[5]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[5]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+ 
     #print("test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images,
     #                                                  y_: mnist.test.labels}))
     
