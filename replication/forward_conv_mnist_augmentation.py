@@ -27,9 +27,7 @@ def max_pool_2x2(x):
 
 batch_size = 128
 num_classes = 10
-
 img_rows, img_cols = 28, 28
-
 # the data, shuffled and split between train and test sets
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
@@ -67,7 +65,7 @@ images = datagen.flow(x_train, y_train, batch_size=batch_size)
 weights = []
 train_accuracies = []
 forward_accuracies = []
-epoch_iter = int(55000/batch_size)
+epoch_iter = len(xtrain) // batch_size
 epoch_sequence = [1,1,98]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
