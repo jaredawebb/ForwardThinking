@@ -65,7 +65,7 @@ images = datagen.flow(x_train, y_train, batch_size=batch_size)
 weights = []
 train_accuracies = []
 forward_accuracies = []
-epoch_iter = len(xtrain) // batch_size
+epoch_iter = len(x_train) // batch_size
 epoch_sequence = [1,1,98]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
@@ -109,7 +109,7 @@ with tf.Session() as sess:
         # batch = mnist.train.next_batch(50)
         batch = images.next()
         if i%100 == 0 and i > 0:
-            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((batch_size, 784)), 
+            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1]})
             print("step %d, training accuracy %g"%(i, train_accuracy))
             
@@ -129,7 +129,7 @@ with tf.Session() as sess:
             if flag:
                 forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
                 
-        train_step.run(feed_dict={x: batch[0].reshape((batch_size,784)), y_: batch[1]})
+        train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1]})
 
     #print("test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images,
     #                                                  y_: mnist.test.labels}))
@@ -192,7 +192,7 @@ with tf.Session() as sess:
     for i in range(epoch_iter*epoch_sequence[1]):
         batch = images.next()
         if i%100 == 0 and i > 0:
-            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((batch_size, 784)), 
+            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1]})
             print("step %d, training accuracy %g"%(i, train_accuracy))
             acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000]})
@@ -210,7 +210,7 @@ with tf.Session() as sess:
             if flag:
                 forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
                 
-        train_step.run(feed_dict={x: batch[0].reshape((batch_size,784)), y_: batch[1]})
+        train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1]})
 
         if i == (epoch_iter - 1):
             weights.append((W_conv2.eval(), b_conv2.eval()))
@@ -266,22 +266,25 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
 y_conv_drop = tf.nn.dropout(y_conv, 0.5)
 
+learning_rate = tf.placeholder(tf.float32, shape=[])
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
-train_step = tf.train.AdamOptimizer(0.005).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
 
 flag = True
+lr = learning_rates[0]
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
     for i in range(epoch_iter*epoch_sequence[2]):
         batch = images.next()
         if i%100 == 0 and i > 0:
-            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((batch_size, 784)), 
-                                                      y_: batch[1]})
+            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
+                                                      y_: batch[1],
+                                                      learning_rate: lr})
             print("step %d, training accuracy %g"%(i, train_accuracy))
             acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000]})
             acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000]})
@@ -298,18 +301,37 @@ with tf.Session() as sess:
             if flag:
                 forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
                 
-        train_step.run(feed_dict={x: batch[0].reshape((batch_size,784)), y_: batch[1]})
+        train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1], learning_rate: lr})
 
         if i == epoch_iter*2:
-            train_step = tf.train.AdamOptimizer(learning_rates[1]).minimize(cross_entropy)
+            lr = learning_rates[1]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[1]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
         elif i == epoch_iter*10:
-            train_step = tf.train.AdamOptimizer(learning_rates[2]).minimize(cross_entropy)
+            lr = learning_rates[2]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[2]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
         elif i == epoch_iter*40:
-            train_step = tf.train.AdamOptimizer(learning_rates[3]).minimize(cross_entropy)
+            lr = learning_rates[3]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[3]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
         elif i == epoch_iter*60:
-            train_step = tf.train.AdamOptimizer(learning_rates[4]).minimize(cross_entropy)
+            lr = learning_rates[4]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[4]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
+
         elif i == epoch_iter*80:
-            train_step = tf.train.AdamOptimizer(learning_rates[5]).minimize(cross_entropy)
+            lr = learning_rates[5]
+            print("Learning Rate Updated to: " + str(lr))
+            #train_step = tf.train.AdamOptimizer(learning_rates[5]).minimize(cross_entropy)
+            #sess.run(tf.global_variables_initializer())
 
 '''
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
