@@ -54,14 +54,16 @@ b_fc1 = bias_variable([150])
 h_pool3_flat = tf.reshape(h_pool3, [-1, 4*4*128])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)
 
-h_fc1_drop = tf.nn.dropout(h_fc1, 0.3)
+keep_prob1 = tf.placeholder(tf.float32, shape=[])
+h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
 W_fc2 = weight_variable([150, 10])
 b_fc2 = bias_variable([10])
 
 y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-y_conv_drop = tf.nn.dropout(y_conv, 0.5)
+keep_prob2 = tf.placeholder(tf.float32, shape=[])
+y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_conv, y_))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
@@ -76,11 +78,15 @@ with tf.Session() as sess:
         batch = mnist.train.next_batch(50)
         if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
-                                                      y_: batch[1]})
+                                                      y_: batch[1],
+                                                      keep_prob1:1.,
+                                                      keep_prob2:1.})
             print("step %d, training accuracy %g"%(i, train_accuracy))
             train_accuracies.append(accuracy.eval(feed_dict={x: mnist.test.images,
-                                                      y_: mnist.test.labels}))
-        train_step.run(feed_dict={x: batch[0], y_: batch[1]})
+                                                      y_: mnist.test.labels,
+                                                            keep_prob1:1.,
+                                                            keep_prob2:1.}))
+        train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob1:0.3, keep_prob2:0.5})
 
     print("test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images,
                                                       y_: mnist.test.labels}))
