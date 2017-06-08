@@ -111,7 +111,7 @@ lr = learning_rates[0]
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for i in range(epoch_iter*epoch_sequence[2]):
+    for i in range(epoch_iter*epoch_sequence[0]):
         batch = images.next()
         if i%100 == 0 and i > 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
@@ -232,7 +232,7 @@ lr = learning_rates[0]
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for i in range(epoch_iter*epoch_sequence[2]):
+    for i in range(epoch_iter*epoch_sequence[1]):
         batch = images.next()
         if i%100 == 0 and i > 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
