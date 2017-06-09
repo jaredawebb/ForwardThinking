@@ -36,6 +36,8 @@ else:
 x_test = x_test.astype('float32')
 x_test /= 255
 
+y_test = keras.utils.to_categorical(y_test, num_classes)
+
 
 def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[1e-4]):
     # Pass in the weights, freeze all but the first layer, and then update the weights
