@@ -1,6 +1,11 @@
 import tensorflow as tf
 import numpy as np
 
+import keras
+from keras import backend as K
+from keras.datasets import mnist
+from keras.preprocessing.image import ImageDataGenerator
+
 def weight_variable(shape):
   initial = tf.truncated_normal(shape, stddev=0.1)
   return tf.Variable(initial)
@@ -15,6 +20,21 @@ def conv2d(x, W):
 def max_pool_2x2(x):
   return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                         strides=[1, 2, 2, 1], padding='SAME')
+
+num_classes = 10
+img_rows, img_cols = 28, 28
+# the data, shuffled and split between train and test sets
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+if K.image_data_format() == 'channels_first':
+    x_test = x_test.reshape(x_test.shape[0], 1, img_rows, img_sacols)
+    input_shape = (1, img_rows, img_cols)
+else:
+    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+    input_shape = (img_rows, img_cols, 1)
+
+x_test = x_test.astype('float32')
+x_test /= 255
 
 
 def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[1e-4]):
