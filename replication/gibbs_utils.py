@@ -81,7 +81,7 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
-        for i in range(epoch_iter*mult):
+        for i in range(epoch_iter):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
             if i%100 == 0 and i > 0:
@@ -90,7 +90,6 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
                                                           keep_prob1: 1., 
                                                           keep_prob2: 1.,
                                                           learning_rate: lr})
-                print("step %d, training accuracy %g"%(i, train_accuracy))
 
                 acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1., learning_rate:lr})
                 acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1., learning_rate:lr})
@@ -103,9 +102,12 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
                 acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1., learning_rate:lr})
                 acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1., learning_rate:lr})
 
-                train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+                acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
+                train_accuracies.append(acc)
                 if flag:
-                    forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+                    forward_accuracies.append(acc)
+
+                print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
 
             train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                       keep_prob1:0.3, keep_prob2:0.5, learning_rate:lr})
@@ -181,7 +183,7 @@ def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
-        for i in range(epoch_iter*mult):
+        for i in range(epoch_iter):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
             if i%100 == 0 and i > 0:
@@ -190,7 +192,6 @@ def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
                                                           keep_prob1: 1., 
                                                           keep_prob2: 1.,
                                                           learning_rate: lr})
-                print("step %d, training accuracy %g"%(i, train_accuracy))
 
                 acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1., learning_rate:lr})
                 acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1., learning_rate:lr})
@@ -203,9 +204,12 @@ def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
                 acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1., learning_rate:lr})
                 acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1., learning_rate:lr})
 
-                train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+                acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
+                train_accuracies.append(acc)
                 if flag:
-                    forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+                    forward_accuracies.append(acc)
+
+                print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
 
             train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                       keep_prob1:0.3, keep_prob2:0.5, learning_rate:lr})
@@ -288,7 +292,7 @@ def layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
                                                           keep_prob1: 1., 
                                                           keep_prob2: 1.,
                                                           learning_rate: lr})
-                print("step %d, training accuracy %g"%(i, train_accuracy))
+
 
                 acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1., learning_rate:lr})
                 acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1., learning_rate:lr})
@@ -301,10 +305,12 @@ def layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
                 acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1., learning_rate:lr})
                 acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1., learning_rate:lr})
 
-                train_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+                acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
+                train_accuracies.append(acc)
                 if flag:
-                    forward_accuracies.append(np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10]))
+                    forward_accuracies.append(acc)
 
+                print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
             train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                       keep_prob1:0.3, keep_prob2:0.5, learning_rate:lr})
             if i == epoch_iter - 1 and mult == 1:
