@@ -26,7 +26,7 @@ new_weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = 1100
-epoch_sequence = [6,5,4,3]
+epoch_sequence = [10,9,8,7]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])

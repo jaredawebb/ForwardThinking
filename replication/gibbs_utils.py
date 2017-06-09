@@ -1,6 +1,29 @@
 import tensorflow as tf
 import numpy as np
 
+import keras
+from keras import backend as K
+from keras.datasets import mnist
+from keras.preprocessing.image import ImageDataGenerator
+from keras import backend as K
+
+num_classes = 10
+img_rows, img_cols = 28, 28
+# the data, shuffled and split between train and test sets
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+if K.image_data_format() == 'channels_first':
+    x_test = x_test.reshape(x_test.shape[0], 1, img_rows, img_sacols)
+    input_shape = (1, img_rows, img_cols)
+else:
+    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+    input_shape = (img_rows, img_cols, 1)
+
+x_test = x_test.astype('float32')
+x_test /= 255
+
+y_test = keras.utils.to_categorical(y_test, num_classes)
+
 def weight_variable(shape):
   initial = tf.truncated_normal(shape, stddev=0.1)
   return tf.Variable(initial)
@@ -59,7 +82,7 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist):
     h_pool3_flat = tf.reshape(h_pool3, [-1, flat_dim])
     h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)
 
-    keep_prob1 = tf.placeholder(tf.float32, size=[])
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
     W_fc2 = weight_variable([150, 10])
@@ -67,7 +90,7 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist):
 
     y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-    keep_prob2 = tf.placeholder(tf.float32, size=[])
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
     y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
     cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
@@ -83,7 +106,7 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
             if i%100 == 0 and i > 0:
-                train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((50, 784)), 
+                train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
                                                           keep_prob2: 1.})
@@ -156,14 +179,15 @@ def layer_2(weights, images, forward_accuracies, epoch_iter, mnist):
     h_pool3_flat = tf.reshape(h_pool3, [-1, flat_dim])
     h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)
 
-        h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
     W_fc2 = weight_variable([150, 10])
     b_fc2 = bias_variable([10])
 
     y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-    keep_prob2 = tf.placeholder(tf.float32, size=[])
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
     y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
     cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
@@ -179,7 +203,7 @@ def layer_2(weights, images, forward_accuracies, epoch_iter, mnist):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
             if i%100 == 0 and i > 0:
-                train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((50, 784)), 
+                train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
                                                           keep_prob2: 1.})
@@ -250,14 +274,15 @@ def layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=1):
     h_pool3_flat = tf.reshape(h_pool3, [-1, flat_dim])
     h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)
 
-        h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
     W_fc2 = weight_variable([150, 10])
     b_fc2 = bias_variable([10])
 
     y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-    keep_prob2 = tf.placeholder(tf.float32, size=[])
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
     y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
     cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
@@ -269,11 +294,11 @@ def layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=1):
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
-        for i in range(epoch_iter):
+        for i in range(epoch_iter*mult):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
             if i%100 == 0 and i > 0:
-                train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((50, 784)), 
+                train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
                                                           keep_prob2: 1.})

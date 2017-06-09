@@ -59,13 +59,13 @@ datagen = ImageDataGenerator(
 #x_test = mnist.test.images.reshape(mnist.test.images.shape[0], 28, 28, 1)
 
 datagen.fit(x_train)
-images = datagen.flow(x_train, mnist.train.labels, batch_size=50)
+images = datagen.flow(x_train, y_train, batch_size=batch_size)
 
 ################ Train the first layer  ######################
 weights = []
 train_accuracies = []
 forward_accuracies = []
-epoch_iter = 1101
+epoch_iter = len(x_train) // batch_size
 epoch_sequence = [1,1,1]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
@@ -87,7 +87,7 @@ b_fc1 = bias_variable([150])
 h_pool1_flat = tf.reshape(h_pool1, [-1, flat_dim])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool1_flat, W_fc1) + b_fc1)
 
-keep_prob1 = tf.placeholder(tf.float32, size=[])
+keep_prob1 = tf.placeholder(tf.float32, shape=[])
 h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
 W_fc2 = weight_variable([150, 10])
@@ -95,7 +95,7 @@ b_fc2 = bias_variable([10])
 
 y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-keep_prob2 = tf.placeholder(tf.float32, size=[])
+keep_prob2 = tf.placeholder(tf.float32, shape=[])
 y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
@@ -111,7 +111,7 @@ with tf.Session() as sess:
         # batch = mnist.train.next_batch(50)
         batch = images.next()
         if i%100 == 0 and i > 0:
-            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((50, 784)), 
+            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
                                                       keep_prob1: 1., 
                                                       keep_prob2: 1.})
@@ -175,7 +175,7 @@ b_fc1 = bias_variable([150])
 h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
-keep_prob1 = tf.placeholder(tf.float32, size=[])
+keep_prob1 = tf.placeholder(tf.float32, shape=[])
 h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
 W_fc2 = weight_variable([150, 10])
@@ -183,7 +183,7 @@ b_fc2 = bias_variable([10])
 
 y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-keep_prob2 = tf.placeholder(tf.float32, size=[])
+keep_prob2 = tf.placeholder(tf.float32, shape=[])
 y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
@@ -199,7 +199,7 @@ with tf.Session() as sess:
         # batch = mnist.train.next_batch(50)
         batch = images.next()
         if i%100 == 0 and i > 0:
-            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((50, 784)), 
+            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
                                                       keep_prob1: 1., 
                                                       keep_prob2: 1.})
@@ -266,7 +266,7 @@ b_fc1 = bias_variable([150])
 h_pool3_flat = tf.reshape(h_pool3, [-1, flat_dim])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)
 
-keep_prob1 = tf.placeholder(tf.float32, size=[])
+keep_prob1 = tf.placeholder(tf.float32, shape=[])
 h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
 W_fc2 = weight_variable([150, 10])
@@ -274,7 +274,7 @@ b_fc2 = bias_variable([10])
 
 y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-keep_prob2 = tf.placeholder(tf.float32, size=[])
+keep_prob2 = tf.placeholder(tf.float32, shape=[])
 y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
@@ -290,7 +290,7 @@ with tf.Session() as sess:
         # batch = mnist.train.next_batch(50)
         batch = images.next()
         if i%100 == 0 and i > 0:
-            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((50, 784)), 
+            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
                                                       keep_prob1: 1., 
                                                       keep_prob2: 1.})
