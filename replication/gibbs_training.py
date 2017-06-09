@@ -55,8 +55,8 @@ datagen = ImageDataGenerator(
     height_shift_range=0.05,  # randomly shift images vertically (fraction of total height)
     zoom_range=.1)
 
-x_train = mnist.train.images.reshape(mnist.train.images.shape[0], 28, 28, 1)
-x_test = mnist.test.images.reshape(mnist.test.images.shape[0], 28, 28, 1)
+#x_train = mnist.train.images.reshape(mnist.train.images.shape[0], 28, 28, 1)
+#x_test = mnist.test.images.reshape(mnist.test.images.shape[0], 28, 28, 1)
 
 datagen.fit(x_train)
 images = datagen.flow(x_train, mnist.train.labels, batch_size=50)
