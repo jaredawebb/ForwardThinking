@@ -59,7 +59,7 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
     h_pool3_flat = tf.reshape(h_pool3, [-1, flat_dim])
     h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)
 
-    keep_prob1 = tf.placeholder(tf.float32, size=[])
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
     W_fc2 = weight_variable([150, 10])
@@ -67,7 +67,7 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
 
     y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-    keep_prob2 = tf.placeholder(tf.float32, size=[])
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
     y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
     learning_rate = tf.placeholder(tf.float32, shape=[])
@@ -159,7 +159,7 @@ def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
     h_pool3_flat = tf.reshape(h_pool3, [-1, flat_dim])
     h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)
 
-    keep_prob1 = tf.placeholder(tf.float32, size=[])
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
     W_fc2 = weight_variable([150, 10])
@@ -167,7 +167,7 @@ def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
 
     y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-    keep_prob2 = tf.placeholder(tf.float32, size=[])
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
     y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
     learning_rate = tf.placeholder(tf.float32, shape=[])
@@ -257,7 +257,7 @@ def layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
     h_pool3_flat = tf.reshape(h_pool3, [-1, flat_dim])
     h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)
 
-    keep_prob1 = tf.placeholder(tf.float32, size=[])
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
 
     W_fc2 = weight_variable([150, 10])
@@ -265,7 +265,7 @@ def layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
 
     y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
-    keep_prob2 = tf.placeholder(tf.float32, size=[])
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
     y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
     learning_rate = tf.placeholder(tf.float32, shape=[])
