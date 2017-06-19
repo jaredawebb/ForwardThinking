@@ -348,16 +348,16 @@ import gibbs_utils
     #elif i % 9 == 8:
     #    gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist)       
 
-gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
-gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
-gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
-gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
-gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
-gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
-gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
-gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
-gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
-gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
+gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
 
 gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=70, learning_rates=[0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005])
 
