@@ -66,7 +66,7 @@ weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = len(x_train) // batch_size
-epoch_sequence = [5,5,5]
+epoch_sequence = [1,2,7]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
@@ -359,7 +359,7 @@ gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult
 gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
 gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002])
 
-gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=65, learning_rates=[0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005])
+gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=70, learning_rates=[0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005])
 
 print(forward_accuracies[-10:])
 print(np.mean(forward_accuracies[-10:]))
