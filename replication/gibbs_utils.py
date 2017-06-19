@@ -352,19 +352,19 @@ def layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
                 #train_step = tf.train.AdamOptimizer(learning_rates[2]).minimize(cross_entropy)
                 #sess.run(tf.global_variables_initializer())
 
-            elif i == epoch_iter*20:
+            elif i == epoch_iter*30:
                 lr = learning_rates[3]
                 print("Learning Rate Updated to: " + str(lr))
                 #train_step = tf.train.AdamOptimizer(learning_rates[3]).minimize(cross_entropy)
                 #sess.run(tf.global_variables_initializer())
 
-            elif i == epoch_iter*40:
+            elif i == epoch_iter*50:
                 lr = learning_rates[4]
                 print("Learning Rate Updated to: " + str(lr))
                 #train_step = tf.train.AdamOptimizer(learning_rates[4]).minimize(cross_entropy)
                 #sess.run(tf.global_variables_initializer())
 
-            elif i == epoch_iter*60:
+            elif i == epoch_iter*70:
                 lr = learning_rates[5]
                 print("Learning Rate Updated to: " + str(lr))
                 #train_step = tf.train.AdamOptimizer(learning_rates[5]).minimize(cross_entropy)
