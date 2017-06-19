@@ -98,7 +98,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 keep_prob2 = tf.placeholder(tf.float32, shape=[])
 y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -186,7 +186,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 keep_prob2 = tf.placeholder(tf.float32, shape=[])
 y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -277,7 +277,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 keep_prob2 = tf.placeholder(tf.float32, shape=[])
 y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -324,7 +324,7 @@ with tf.Session() as sess:
 
 ################################ Now that we have trained 3 layers, let's retrain each layer one at a time.
 
-gibbs_epochs=10
+gibbs_epochs=20
 import gibbs_utils
 
 for i in range(gibbs_epochs):
@@ -348,7 +348,7 @@ for i in range(gibbs_epochs):
     #elif i % 9 == 8:
     #    gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist)       
 
-gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=87, learning_rates=[0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005])
+gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=97, learning_rates=[0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005])
 
 print(forward_accuracies[-10:])
 print(np.mean(forward_accuracies[-10:]))
