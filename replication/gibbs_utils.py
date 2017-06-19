@@ -39,7 +39,7 @@ x_test /= 255
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 
-def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[1e-4]):
+def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, learning_rates=[1e-4]):
     # Pass in the weights, freeze all but the first layer, and then update the weights
     
     train_accuracies = []
@@ -103,7 +103,7 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
-        for i in range(epoch_iter):
+        for i in range(epoch_iter*mult):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
             if i%100 == 0 and i > 0:
@@ -141,7 +141,7 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
         
         
         
-def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[1e-4]):
+def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, learning_rates=[1e-4]):
     # Pass in the weights, freeze all but the first layer, and then update the weights
     
     train_accuracies = []
@@ -205,7 +205,7 @@ def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
-        for i in range(epoch_iter):
+        for i in range(epoch_iter*mult):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
             if i%100 == 0 and i > 0:
