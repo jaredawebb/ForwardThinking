@@ -66,7 +66,7 @@ weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = len(x_train) // batch_size
-epoch_sequence = [1,2,7]
+epoch_sequence = [1,1,1]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
@@ -324,17 +324,17 @@ with tf.Session() as sess:
 
 ################################ Now that we have trained 3 layers, let's retrain each layer one at a time.
 
-gibbs_epochs=20
+gibbs_epochs=10
 import gibbs_utils
 
-#for i in range(gibbs_epochs):
-#    print(i)
-#    if i % 3 == 0:
-#        gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.005])
-#    elif i % 3 == 1:
-#        gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.005])
-#    elif i % 3 == 2:
-#        gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.005])
+for i in range(gibbs_epochs):
+    #print(i)
+    if i % 3 == 0:
+        gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.005])
+    elif i % 3 == 1:
+        gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.005])
+    elif i % 3 == 2:
+        gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.005])
     #ielif i % 9 == 3:
     #    gibbs_utils.layer_4(weights, images, forward_accuracies, epoch_iter, mnist)       
     #elif i % 9 == 4:
@@ -348,18 +348,18 @@ import gibbs_utils
     #elif i % 9 == 8:
     #    gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist)       
 
-gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
-gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
-gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
-gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
-gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
-gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
-gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
-gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
-gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
-gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
 
-gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=70, learning_rates=[0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005])
+gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=77, learning_rates=[0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005])
 
 print(forward_accuracies[-10:])
 print(np.mean(forward_accuracies[-10:]))
