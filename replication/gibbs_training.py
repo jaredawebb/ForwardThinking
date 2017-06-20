@@ -359,7 +359,18 @@ for i in range(gibbs_epochs):
 #gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
 #gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
 
-gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=77, learning_rates=[0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005])
+gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=30, learning_rates=[0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005])
+
+for i in range(gibbs_epochs):
+    #print(i)
+    if i % 3 == 0:
+        gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.001])
+    elif i % 3 == 1:
+        gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.001])
+    elif i % 3 == 2:
+        gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.001])
+        
+gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=37, learning_rates=[0.001, 0.0005, 0.0001, 0.00005])
 
 print(forward_accuracies[-10:])
 print(np.mean(forward_accuracies[-10:]))
