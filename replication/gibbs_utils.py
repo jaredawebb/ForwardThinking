@@ -106,7 +106,7 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
         for i in range(epoch_iter*mult):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
-            if i%100 == 0 and i > 0:
+            if i%100 == 0:
                 train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
@@ -208,7 +208,7 @@ def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
         for i in range(epoch_iter*mult):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
-            if i%100 == 0 and i > 0:
+            if i%100 == 0:
                 train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
@@ -308,7 +308,7 @@ def layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
         for i in range(epoch_iter*mult):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
-            if i%100 == 0 and i > 0:
+            if i%100 == 0:
                 train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                           y_: batch[1],
                                                           keep_prob1: 1., 

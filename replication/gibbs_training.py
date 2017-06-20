@@ -110,7 +110,7 @@ with tf.Session() as sess:
     for i in range(epoch_iter*epoch_sequence[0]):
         # batch = mnist.train.next_batch(50)
         batch = images.next()
-        if i%100 == 0 and i > 0:
+        if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
                                                       keep_prob1: 1., 
@@ -198,7 +198,7 @@ with tf.Session() as sess:
     for i in range(epoch_iter*epoch_sequence[0]):
         # batch = mnist.train.next_batch(50)
         batch = images.next()
-        if i%100 == 0 and i > 0:
+        if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
                                                       keep_prob1: 1., 
@@ -289,7 +289,7 @@ with tf.Session() as sess:
     for i in range(epoch_iter*epoch_sequence[0]):
         # batch = mnist.train.next_batch(50)
         batch = images.next()
-        if i%100 == 0 and i > 0:
+        if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
                                                       keep_prob1: 1., 
