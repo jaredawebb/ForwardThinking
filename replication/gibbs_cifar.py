@@ -68,7 +68,7 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 x_image = tf.reshape(x, [-1,32,32,3])
 #######Layer 1
 with tf.variable_scope("layer1", reuse=True):
-    W_conv1 = weight_variable([3, 3, 1, 32])#weight_variable([3, 3, 1, 256])
+    W_conv1 = weight_variable([3, 3, 3, 32])#weight_variable([3, 3, 1, 256])
     b_conv1 = bias_variable([32])
 
 h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
