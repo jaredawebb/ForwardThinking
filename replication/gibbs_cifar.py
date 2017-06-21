@@ -142,7 +142,7 @@ optimizer = tf.train.AdamOptimizer(1e-4)
 train_steps = [optimizer.minimize(cross_entropy,
                                   var_list=train_vars[i] + train_vars[-1]) for i in range(len(layers)-1)]
 
-correct_prediction = tf.equal(tf.argmax(y_conv_drop,1), tf.argmax(y_,1))
+correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 init_op = tf.global_variables_initializer()
 
