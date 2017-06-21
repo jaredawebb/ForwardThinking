@@ -123,13 +123,18 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 init_op = tf.global_variables_initializer()
 
 accuracies = []
+epochs = 100
 
 with tf.Session() as sess:
     sess.run(init_op)
     
-    for i in range(epoch_iter*100):
+    for i in range(epoch_iter*epochs):
         # batch = mnist.train.next_batch(50)
         batch = images.next()
+        
+        if i & epoch_iter == 0:
+            print("Starting Epoch %d of %d" % (i // epoch_iter, epochs))
+        
         if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
@@ -157,6 +162,8 @@ with tf.Session() as sess:
             train_steps[i % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                   keep_prob1:0.3, keep_prob2:0.5})
         else:
+            if i == 40:
+                print("Switching to output layer only.")
             train_steps[-1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                   keep_prob1:0.3, keep_prob2:0.5})
     
