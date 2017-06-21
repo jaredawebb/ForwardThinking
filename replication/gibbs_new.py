@@ -132,7 +132,7 @@ with tf.Session() as sess:
         # batch = mnist.train.next_batch(50)
         batch = images.next()
         
-        if i & epoch_iter == 0:
+        if i % epoch_iter == 0:
             print("Starting Epoch %d of %d" % (i // epoch_iter, epochs))
         
         if i%100 == 0:
@@ -158,11 +158,11 @@ with tf.Session() as sess:
             
             print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
         
-        if i < 40:
+        if i < 40*epoch_iter:
             train_steps[i % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                   keep_prob1:0.3, keep_prob2:0.5})
         else:
-            if i == 40:
+            if i // epoch_iter == 40:
                 print("Switching to output layer only.")
             train_steps[-1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                   keep_prob1:0.3, keep_prob2:0.5})
