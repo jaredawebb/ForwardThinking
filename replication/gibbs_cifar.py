@@ -135,7 +135,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
 
-layers = ['layer1', 'layer2', 'layer3', 'fullyconnected', 'output']
+layers = ['layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'fullyconnected', 'output']
 train_vars = [tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, layer) for layer in layers]
 optimizer = tf.train.AdamOptimizer(1e-4)
 
