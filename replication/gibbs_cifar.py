@@ -114,7 +114,7 @@ with tf.variable_scope("layer6"):
 
 h_conv6 = tf.nn.relu(conv2d(h_conv5, W_conv6) + b_conv6)
 
-flat_dim = int(h_conv6.get_shape()[0]*h_conv6.get_shape()[1]*h_conv6.get_shape()[3]*h_conv6.get_shape()[4])
+flat_dim = int(h_conv6.get_shape()[1]*h_conv6.get_shape()[2]*h_conv6.get_shape()[3])
 
 with tf.variable_scope("fullyconnected"):
     W_fc1 = weight_variable([flat_dim, 256])
