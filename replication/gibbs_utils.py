@@ -95,7 +95,7 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
     learning_rate = tf.placeholder(tf.float32, shape=[])
     cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
     train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
-    correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
+    correct_prediction = tf.equal(tf.argmax(y_conv_drop,1), tf.argmax(y_,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     lr = learning_rates[0]
@@ -104,7 +104,9 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
         sess.run(tf.global_variables_initializer())
 
         for i in range(epoch_iter*mult):
-            # batch = mnist.train.next_batch(50)
+            
+            epoch_number = i // epoch_iter
+            
             batch = images.next()
             if i%100 == 0:
                 train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 

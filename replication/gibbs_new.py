@@ -124,17 +124,19 @@ init_op = tf.global_variables_initializer()
 
 
 epochs = 100
-cutoffs = [2, 4, 8, 16, 32]
+cutoffs = [64, 82, 100]
 for cutoff in cutoffs:
     with tf.Session() as sess:
         sess.run(init_op)
         accuracies = []    
         for i in range(epoch_iter*epochs):
-            # batch = mnist.train.next_batch(50)
+            
+            epoch_number = i // epoch_iter
+            
             batch = images.next()
 
             if i % epoch_iter == 0:
-                print("Starting Epoch %d of %d" % (i // epoch_iter, epochs))
+                print("Starting Epoch %d of %d, Training Layer %d" % (i // epoch_iter, epochs, epoch_number % len(train_steps))
 
             if i%100 == 0:
                 train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
@@ -160,10 +162,18 @@ for cutoff in cutoffs:
                 print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
 
             if i < cutoff*epoch_iter:
-                train_steps[i % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
-                                      keep_prob1:0.3, keep_prob2:0.5})
+                train_steps[i % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+                                                                            y_: batch[1],
+                                                                            keep_prob1:0.3,
+                                                                            keep_prob2:0.5})
+                '''
+                train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+                                                                            y_: batch[1],
+                                                                            keep_prob1:0.3,
+                                                                            keep_prob2:0.5})
+                '''
             else:
-                if i / epoch_iter == cutoff:
+                if epoch_iter*cutoff == i:
                     print("Switching to output layer only.")
                 train_steps[-1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                       keep_prob1:0.3, keep_prob2:0.5})
