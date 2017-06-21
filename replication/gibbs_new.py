@@ -136,7 +136,8 @@ for cutoff in cutoffs:
             batch = images.next()
 
             if i % epoch_iter == 0:
-                print("Starting Epoch %d of %d, Training Layer %d" % (i // epoch_iter, epochs, epoch_number % len(train_steps))
+                print("Starting Epoch %d of %d" % (i // epoch_iter, epochs)
+                #print("Starting Epoch %d of %d, Training Layer %d" % (i // epoch_iter, epochs, epoch_number & len(train_steps))
 
             if i%100 == 0:
                 train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
