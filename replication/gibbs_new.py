@@ -122,48 +122,50 @@ correct_prediction = tf.equal(tf.argmax(y_conv_drop,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 init_op = tf.global_variables_initializer()
 
-accuracies = []
-epochs = 100
 
-with tf.Session() as sess:
-    sess.run(init_op)
-    
-    for i in range(epoch_iter*epochs):
-        # batch = mnist.train.next_batch(50)
-        batch = images.next()
-        
-        if i % epoch_iter == 0:
-            print("Starting Epoch %d of %d" % (i // epoch_iter, epochs))
-        
-        if i%100 == 0:
-            train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
-                                                      y_: batch[1],
-                                                      keep_prob1: 1., 
-                                                      keep_prob2: 1.})
-            
-            acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1.})
-            acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1.})
-            acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000].reshape((1000, 784)), y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1.})
-            acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000].reshape((1000, 784)), y_: y_test[3000:4000], keep_prob1:1., keep_prob2:1.})
-            acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000].reshape((1000, 784)), y_: y_test[4000:5000], keep_prob1:1., keep_prob2:1.})
-            acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000].reshape((1000, 784)), y_: y_test[5000:6000], keep_prob1:1., keep_prob2:1.})
-            acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000].reshape((1000, 784)), y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1.})
-            acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000].reshape((1000, 784)), y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1.})
-            acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1.})
-            acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1.})
-            
-            acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
-            
-            accuracies.append(acc)
-            
-            print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
-        
-        if i < 40*epoch_iter:
-            train_steps[i % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
-                                  keep_prob1:0.3, keep_prob2:0.5})
-        else:
-            if i // epoch_iter == 40:
-                print("Switching to output layer only.")
-            train_steps[-1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
-                                  keep_prob1:0.3, keep_prob2:0.5})
-    
+epochs = 100
+cutoffs = [2, 4, 8, 16, 32]
+for cutoff in cuttoffs:
+    with tf.Session() as sess:
+        sess.run(init_op)
+        accuracies = []    
+        for i in range(epoch_iter*epochs):
+            # batch = mnist.train.next_batch(50)
+            batch = images.next()
+
+            if i % epoch_iter == 0:
+                print("Starting Epoch %d of %d" % (i // epoch_iter, epochs))
+
+            if i%100 == 0:
+                train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
+                                                          y_: batch[1],
+                                                          keep_prob1: 1., 
+                                                          keep_prob2: 1.})
+
+                acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1.})
+                acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1.})
+                acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000].reshape((1000, 784)), y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1.})
+                acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000].reshape((1000, 784)), y_: y_test[3000:4000], keep_prob1:1., keep_prob2:1.})
+                acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000].reshape((1000, 784)), y_: y_test[4000:5000], keep_prob1:1., keep_prob2:1.})
+                acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000].reshape((1000, 784)), y_: y_test[5000:6000], keep_prob1:1., keep_prob2:1.})
+                acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000].reshape((1000, 784)), y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1.})
+                acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000].reshape((1000, 784)), y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1.})
+                acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1.})
+                acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1.})
+
+                acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
+
+                accuracies.append(acc)
+
+                print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
+
+            if i < cutoff*epoch_iter:
+                train_steps[i % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
+                                      keep_prob1:0.3, keep_prob2:0.5})
+            else:
+                if i / epoch_iter == cutoff:
+                    print("Switching to output layer only.")
+                train_steps[-1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
+                                      keep_prob1:0.3, keep_prob2:0.5})
+                
+        np.save('accuracies_'+str(cutoff), accuracies)
