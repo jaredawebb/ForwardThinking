@@ -62,7 +62,7 @@ images = datagen.flow(x_train, y_train, batch_size=batch_size)
 
 epoch_iter = len(x_train) // batch_size
 
-x = tf.placeholder(tf.float32, shape=[None, 784])
+x = tf.placeholder(tf.float32, shape=[None, 32*32])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 x_image = tf.reshape(x, [-1,32,32,1])
