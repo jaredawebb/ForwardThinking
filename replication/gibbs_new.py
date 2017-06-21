@@ -125,7 +125,7 @@ init_op = tf.global_variables_initializer()
 
 epochs = 100
 cutoffs = [2, 4, 8, 16, 32]
-for cutoff in cuttoffs:
+for cutoff in cutoffs:
     with tf.Session() as sess:
         sess.run(init_op)
         accuracies = []    
