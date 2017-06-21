@@ -159,7 +159,8 @@ for cutoff in cutoffs:
             batch = images.next()
 
             if i % epoch_iter == 0:
-                print("Starting Epoch %d of %d, Training Layer %d" % (i // epoch_iter, epochs, epoch_number % len(train_steps))
+                print("Starting Epoch %d of %d" % (i // epoch_iter, epochs))
+                #print("Starting Epoch %d of %d, Training Layer %d" % (i // epoch_iter, epochs, epoch_number // len(train_steps))
 
             if i%100 == 0:
                 train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
@@ -185,14 +186,16 @@ for cutoff in cutoffs:
                 print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
 
             if i < cutoff*epoch_iter:
-                                train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+                train_steps[i % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
                                                                             y_: batch[1],
                                                                             keep_prob1:0.5,
                                                                             keep_prob2:0.5})
+                '''
                 train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
                                                                             y_: batch[1],
                                                                             keep_prob1:0.5,
                                                                             keep_prob2:0.5})
+                '''
             else:
                 if epoch_iter*cutoff == i:
                     print("Switching to output layer only.")
