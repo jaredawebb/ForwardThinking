@@ -3,7 +3,7 @@ import numpy as np
 
 import keras
 from keras import backend as K
-from keras.datasets import cifar
+from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 
 def weight_variable(shape):
@@ -26,7 +26,7 @@ batch_size = 128
 num_classes = 10
 img_rows, img_cols = 32, 32
 # the data, shuffled and split between train and test sets
-(x_train, y_train), (x_test, y_test) = cifar.load_data()
+(x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
 if K.image_data_format() == 'channels_first':
     x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
