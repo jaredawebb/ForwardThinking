@@ -202,7 +202,7 @@ for cutoff in cutoffs:
                 if epoch_iter*cutoff == i:
                     print("Switching to output layer only.")
                 train_steps[-1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
-                                      keep_prob1:0.5, keep_prob2:0.5, , keep_prob3:0.5})
+                                      keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
                 
         np.save('accuracies_'+str(cutoff), accuracies)
 
