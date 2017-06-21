@@ -62,16 +62,16 @@ images = datagen.flow(x_train, y_train, batch_size=batch_size)
 
 epoch_iter = len(x_train) // batch_size
 
-x = tf.placeholder(tf.float32, shape=[None, 32*32, 3])
+x = tf.placeholder(tf.float32, shape=[None, 32, 32, 3])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
-x_image = tf.reshape(x, [-1,32,32,3])
+#x_image = tf.reshape(x, [-1,32,32,3])
 #######Layer 1
 with tf.variable_scope("layer1", reuse=True):
     W_conv1 = weight_variable([3, 3, 3, 32])#weight_variable([3, 3, 1, 256])
     b_conv1 = bias_variable([32])
 
-h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
+h_conv1 = tf.nn.relu(conv2d(x, W_conv1) + b_conv1)
 
 #######Layer 2
 with tf.variable_scope("layer2"):
@@ -140,7 +140,7 @@ train_vars = [tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, layer) for lay
 optimizer = tf.train.AdamOptimizer(1e-4)
 
 train_steps = [optimizer.minimize(cross_entropy,
-                                  var_list=train_vars[i] + train_vars[-1]) for i in range(len(layers)-1)]
+                                  var_list=train_vars[i] + train_vars[-2] + train_vars[-1]) for i in range(len(layers)-2)]
 
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -163,22 +163,22 @@ for cutoff in cutoffs:
                 #print("Starting Epoch %d of %d, Training Layer %d" % (i // epoch_iter, epochs, epoch_number // len(train_steps))
 
             if i%100 == 0:
-                train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 32*32, 3)), 
+                train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
                                                           keep_prob2: 1.,
                                                           keep_prob3: 1.})
 
-                acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 32*32, 3)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 32*32, 3)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000].reshape((1000, 32*32, 3)), y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000].reshape((1000, 32*32, 3)), y_: y_test[3000:4000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000].reshape((1000, 32*32, 3)), y_: y_test[4000:5000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000].reshape((1000, 32*32, 3)), y_: y_test[5000:6000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000].reshape((1000, 32*32, 3)), y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000].reshape((1000, 32*32, 3)), y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 32*32, 3)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 32*32, 3)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc1 = accuracy.eval(feed_dict={x: x_test[:1000], y_: y_test[:1000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000], y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000], y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000], y_: y_test[3000:4000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000], y_: y_test[4000:5000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000], y_: y_test[5000:6000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000], y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000], y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000], y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc10 = accuracy.eval(feed_dict={x: x_test[9000:], y_: y_test[9000:], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
 
                 acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
 
@@ -187,7 +187,7 @@ for cutoff in cutoffs:
                 print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
 
             if i < cutoff*epoch_iter:
-                train_steps[i % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),32*32,3)),
+                train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
                                                                             y_: batch[1],
                                                                             keep_prob1:0.5,
                                                                             keep_prob2:0.5,
@@ -201,7 +201,7 @@ for cutoff in cutoffs:
             else:
                 if epoch_iter*cutoff == i:
                     print("Switching to output layer only.")
-                train_steps[-1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
+                train_steps[-1].run(feed_dict={x: batch[0], y_: batch[1],
                                       keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
                 
         np.save('accuracies_'+str(cutoff), accuracies)
