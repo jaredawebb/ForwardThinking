@@ -178,7 +178,7 @@ for cutoff in cutoffs:
                 acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000].reshape((1000, 32*32, 3)), y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
                 acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000].reshape((1000, 32*32, 3)), y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
                 acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 32*32, 3)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 32*32, 3)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1.})
+                acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 32*32, 3)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
 
                 acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
 
