@@ -28,18 +28,36 @@ img_rows, img_cols = 28, 28
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 if K.image_data_format() == 'channels_first':
+    x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
     x_test = x_test.reshape(x_test.shape[0], 1, img_rows, img_sacols)
     input_shape = (1, img_rows, img_cols)
 else:
+    x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
     input_shape = (img_rows, img_cols, 1)
 
+x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
+x_train /= 255
 x_test /= 255
 
+y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
-epoch_iter = len(mnist.train.images) // batch_size
+datagen = ImageDataGenerator(
+    rotation_range=7,  # randomly rotate images in the range (degrees, 0 to 180)
+    width_shift_range=0.05,  # randomly shift images horizontally (fraction of total width)
+    height_shift_range=0.05,  # randomly shift images vertically (fraction of total height)
+    zoom_range=.1)
+
+#x_train = mnist.train.images.reshape(mnist.train.images.shape[0], 28, 28, 1)
+#x_test = mnist.test.images.reshape(mnist.test.images.shape[0], 28, 28, 1)
+
+datagen.fit(x_train)
+images = datagen.flow(x_train, y_train, batch_size=batch_size)
+
+
+epoch_iter = len(x_train) // batch_size
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
@@ -100,6 +118,8 @@ optimizer = tf.train.AdamOptimizer(1e-4)
 train_steps = [optimizer.minimize(cross_entropy,
                                   var_list=train_vars[i] + train_vars[-1]) for i in range(len(layers)-1)]
 
+correct_prediction = tf.equal(tf.argmax(y_conv_drop,1), tf.argmax(y_,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 init_op = tf.global_variables_initializer()
 
 accuracies = []
@@ -135,6 +155,6 @@ with tf.Session() as sess:
             train_steps[i % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                   keep_prob1:0.3, keep_prob2:0.5})
         else:
-            train_steps[-1]..run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
+            train_steps[-1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                   keep_prob1:0.3, keep_prob2:0.5})
     
