@@ -210,7 +210,7 @@ with tf.variable_scope("layer2"):
 
 flat_dim = int(h_pool2.get_shape()[1]*h_pool2.get_shape()[2]*h_pool2.get_shape()[3])
 
-with tf.variable_scope("fullyconnected1", reuse=True):
+with tf.variable_scope("fullyconnected1"):
     h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
     h_fc1 = full_relu(h_pool2_flat, [flat_dim, 150])
 
