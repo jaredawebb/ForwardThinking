@@ -193,17 +193,17 @@ for cutoff in cutoffs:
             #train_step.run(feed_dict={x: batch[0], y_: batch[1],
             #                          keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
             if i < cutoff*epoch_iter:
-                train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
-                                                                            y_: batch[1],
-                                                                            keep_prob1:0.5,
-                                                                            keep_prob2:0.5,
-                                                                            keep_prob3:0.5})
-                '''
-            #    train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+            #    train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
             #                                                                y_: batch[1],
             #                                                                keep_prob1:0.5,
-            #                                                                keep_prob2:0.5})
-            #    '''
+            #                                                                keep_prob2:0.5,
+            #                                                                keep_prob3:0.5})
+                
+                train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+                                                                            y_: batch[1],
+                                                                            keep_prob1:0.5,
+                                                                            keep_prob2:0.5})
+
             else:
                 if epoch_iter*cutoff == i:
                     print("Switching to output layer only.")
