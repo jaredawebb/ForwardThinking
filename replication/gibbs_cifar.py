@@ -12,7 +12,7 @@ def conv_relu(input, kernel_shape, bias_shape):
         #initializer=tf.random_normal_initializer())
     # Create variable named "biases".
     biases = tf.get_variable("biases", bias_shape)#,
-        #initializer=tf.constant_initializer(0.0))
+        initializer=tf.constant_initializer(0.0))
     conv = tf.nn.conv2d(input, weights,
         strides=[1, 1, 1, 1], padding='SAME')
     return tf.nn.relu(conv + biases)
@@ -196,17 +196,17 @@ for cutoff in cutoffs:
             #elif choice == 1:
             else:
                 if i < cutoff*epoch_iter:
-                    train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
-                                                                                y_: batch[1],
-                                                                                keep_prob1:0.5,
-                                                                                keep_prob2:0.5,
-                                                                                keep_prob3:0.5})
-
-                    #train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0],
+                    #train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
                     #                                                            y_: batch[1],
                     #                                                            keep_prob1:0.5,
                     #                                                            keep_prob2:0.5,
                     #                                                            keep_prob3:0.5})
+
+                    train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0],
+                                                                                y_: batch[1],
+                                                                                keep_prob1:0.5,
+                                                                                keep_prob2:0.5,
+                                                                                keep_prob3:0.5})
 
                 else:
                     if epoch_iter*cutoff == i:
