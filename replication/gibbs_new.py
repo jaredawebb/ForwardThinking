@@ -156,7 +156,7 @@ for cutoff in cutoffs:
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
                                                           keep_prob2: 1.,
-                                                          learing_rate: lr})
+                                                          learning_rate: lr})
 
                 acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
                 acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
