@@ -210,6 +210,6 @@ for cutoff in cutoffs:
             #    train_steps[-1].run(feed_dict={x: batch[0], y_: batch[1],
             #                          keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
                 
-        np.save('accuracies_'+str(cutoff), accuracies)
+        np.save('accuracies_gibbs_'+str(cutoff), accuracies)
 
 
