@@ -81,7 +81,7 @@ weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = len(x_train) // batch_size
-epoch_sequence = [100,99,98]
+epoch_sequence = [1,1,118]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
