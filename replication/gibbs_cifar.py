@@ -7,7 +7,7 @@ from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 
 def weight_variable(shape):
-  initial = tf.truncated_normal(shape, stddev=0.01)
+  initial = tf.truncated_normal(shape, stddev=0.1)
   return tf.Variable(initial)
 
 def bias_variable(shape):
@@ -188,6 +188,7 @@ for cutoff in cutoffs:
                 accuracies.append(acc)
 
                 print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
+            print(np.max(W_conv1.eval()))
 
             train_step.run(feed_dict={x: batch[0], y_: batch[1],
                                       keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
