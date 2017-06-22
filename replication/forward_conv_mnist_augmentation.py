@@ -31,7 +31,7 @@ def full_relu(input, shape):
 def const_relu(input, constant):
     weights = tf.get_variable("weights", constant[0].shape,
                               initializer=tf.constant_initializer(constant[0]))
-    biases = tf.get_variable("biases", constant[0].shape,
+    biases = tf.get_variable("biases", constant[1].shape,
                               initializer=tf.constant_initializer(constant[1]))
                              
     return tf.nn.relu(tf.matmul(input, weights) + biases)
@@ -197,7 +197,6 @@ x_image = tf.reshape(x, [-1,28,28,1])
 
                              
 with tf.variable_scope("layer1", reuse=True):
-    print(weights[0][0].shape, weights[0][1].shape)
     h_conv1 = const_relu(x_image, weights[0])
     h_pool1 = max_pool_2x2(h_conv1)
 
