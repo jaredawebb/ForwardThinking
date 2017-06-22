@@ -120,7 +120,7 @@ flat_dim = int(h_conv6.get_shape()[1]*h_conv6.get_shape()[2]*h_conv6.get_shape()
 #######Fully Connected Layer
 with tf.variable_scope("fullyconnected"):
     h_conv6_flat = tf.reshape(h_conv6, [-1, flat_dim])
-    h_fc1 = full_relu(h_conv6, [flat_dim, 256])
+    h_fc1 = full_relu(h_conv6_flat, [flat_dim, 256])
 
     keep_prob3 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob3)
