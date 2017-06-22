@@ -8,8 +8,8 @@ from keras.preprocessing.image import ImageDataGenerator
 
 def conv_relu(input, kernel_shape, bias_shape):
     # Create variable named "weights".
-    weights = tf.get_variable("weights", kernel_shape,
-        initializer=tf.random_normal_initializer())
+    weights = tf.get_variable("weights", kernel_shape)#,
+        #initializer=tf.random_normal_initializer())
     # Create variable named "biases".
     biases = tf.get_variable("biases", bias_shape,
         initializer=tf.constant_initializer(0.0))
@@ -18,10 +18,10 @@ def conv_relu(input, kernel_shape, bias_shape):
     return tf.nn.relu(conv + biases)
 
 def full_relu(input, shape):
-    weights = tf.get_variable("weights", shape,
-                              initializer=tf.random_normal_initializer())
+    weights = tf.get_variable("weights", shape)#,
+                              #initializer=tf.random_normal_initializer())
     biases = tf.get_variable("biases", [shape[1]],
-                              initializer=tf.random_normal_initializer())
+                              initializer=tf.constant_initializer(0.0))
     return tf.nn.relu(tf.matmul(input, weights) + biases)
 
 def weight_variable(shape):
