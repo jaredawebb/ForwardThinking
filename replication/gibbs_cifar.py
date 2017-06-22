@@ -202,11 +202,11 @@ for cutoff in cutoffs:
                                                                                 keep_prob2:0.5,
                                                                                 keep_prob3:0.5})
 
-                #    train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0],
-                #                                                                y_: batch[1],
-                #                                                                keep_prob1:0.5,
-                #                                                                keep_prob2:0.5,
-                #                                                                keep_prob3:0.5})
+                    #train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0],
+                    #                                                            y_: batch[1],
+                    #                                                            keep_prob1:0.5,
+                    #                                                            keep_prob2:0.5,
+                    #                                                            keep_prob3:0.5})
 
                 else:
                     if epoch_iter*cutoff == i:
