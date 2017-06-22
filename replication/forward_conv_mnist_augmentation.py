@@ -183,7 +183,7 @@ with tf.Session() as sess:
     #                                                  y_: mnist.test.labels}))
     
         if i == epoch_iter-1:
-            weights.append((train_vars[0][0].eval(), train_vars[0][1].eval()))
+            weights.append((train_vars[0].eval(), train_vars[1].eval()))
             flag = False
     np.save('accuracies_layer1_aug', train_accuracies)
     print(len(forward_accuracies)) 
@@ -293,7 +293,7 @@ with tf.Session() as sess:
             #sess.run(tf.global_variables_initializer())
         
         if i == (epoch_iter - 1):
-            weights.append((train_vars[0][0].eval(), train_vars[0][1].eval()))
+            weights.append((train_vars[0].eval(), train_vars[1].eval()))
             flag = False
     np.save('accuracies_layer2_aug', train_accuracies)
     print(len(forward_accuracies))
