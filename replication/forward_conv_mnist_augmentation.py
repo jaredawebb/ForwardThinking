@@ -208,14 +208,14 @@ with tf.variable_scope("layer2"):
 
 flat_dim = int(h_pool2.get_shape()[1]*h_pool2.get_shape()[2]*h_pool2.get_shape()[3])
 
-with tf.variable_scope("fullyconnected"):
+with tf.variable_scope("fullyconnected", reuse=True):
     h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
     h_fc1 = full_relu(h_pool2_flat, [flat_dim, 150])
 
     keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
     
-with tf.variable_scope("output"):
+with tf.variable_scope("output", reuse=True):
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
@@ -306,11 +306,11 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 x_image = tf.reshape(x, [-1,28,28,1])
 
-with tf.variable_scope("layer1"):
+with tf.variable_scope("layer1", reuse=True):
     h_conv1 = const_relu(x_image, weights[0])
     h_pool1 = max_pool_2x2(h_conv1)
 
-with tf.variable_scope("layer2"):
+with tf.variable_scope("layer2", reuseu=True):
     h_conv2 = const_relu(h_pool1, weights[1])
     h_pool2 = max_pool_2x2(h_conv2)
 
@@ -320,14 +320,14 @@ with tf.variable_scope("layer3"):
 
 flat_dim = int(h_pool3.get_shape()[1]*h_pool3.get_shape()[2]*h_pool3.get_shape()[3])
 
-with tf.variable_scope("fullyconnected"):
+with tf.variable_scope("fullyconnected", reuse=True):
     h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
     h_fc1 = full_relu(h_pool2_flat, [flat_dim, 150])
 
     keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
     
-with tf.variable_scope("output"):
+with tf.variable_scope("output", reuse=True):
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
