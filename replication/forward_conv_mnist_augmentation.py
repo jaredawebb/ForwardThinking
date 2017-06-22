@@ -92,20 +92,20 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 x_image = tf.reshape(x, [-1,28,28,1])
 
-with tf.variable_scope("layer1"):
+with tf.variable_scope("1layer1"):
     h_conv1 = conv_relu(x_image, [3, 3, 1, 256], [256])
     h_pool1 = max_pool_2x2(h_conv1)
 
 flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
 
-with tf.variable_scope("fullyconnected"):
+with tf.variable_scope("1fullyconnected"):
     h_pool1_flat = tf.reshape(h_pool1, [-1, flat_dim])
     h_fc1 = full_relu(h_pool1_flat, [flat_dim, 150])
 
     keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
     
-with tf.variable_scope("output"):
+with tf.variable_scope("1output"):
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
@@ -117,7 +117,7 @@ train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-train_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'layer1')
+train_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, '1layer1')
 
 learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
 
@@ -200,24 +200,24 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 x_image = tf.reshape(x, [-1,28,28,1])
 
                              
-with tf.variable_scope("layer1", reuse=True):
+with tf.variable_scope("2layer1", reuse=True):
     h_conv1 = const_relu(x_image, weights[0])
     h_pool1 = max_pool_2x2(h_conv1)
 
-with tf.variable_scope("layer2"):
+with tf.variable_scope("2layer2"):
     h_conv2 = conv_relu(h_pool1, [3, 3, 256, 256], [256])
     h_pool2 = max_pool_2x2(h_conv2)
 
 flat_dim = int(h_pool2.get_shape()[1]*h_pool2.get_shape()[2]*h_pool2.get_shape()[3])
 
-with tf.variable_scope("fullyconnected1"):
+with tf.variable_scope("2fullyconnected"):
     h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
     h_fc1 = full_relu(h_pool2_flat, [flat_dim, 150])
 
     keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
     
-with tf.variable_scope("output", reuse=True):
+with tf.variable_scope("2output", reuse=True):
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
@@ -229,7 +229,7 @@ train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-train_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'layer1')
+train_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, '2layer2')
                              
 learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
 
@@ -308,28 +308,28 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 x_image = tf.reshape(x, [-1,28,28,1])
 
-with tf.variable_scope("layer1", reuse=True):
+with tf.variable_scope("3layer1", reuse=True):
     h_conv1 = const_relu(x_image, weights[0])
     h_pool1 = max_pool_2x2(h_conv1)
 
-with tf.variable_scope("layer2", reuse=True):
+with tf.variable_scope("3layer2", reuse=True):
     h_conv2 = const_relu(h_pool1, weights[1])
     h_pool2 = max_pool_2x2(h_conv2)
 
-with tf.variable_scope("layer3"):
+with tf.variable_scope("3layer3"):
     h_conv3 = conv_relu(h_pool2, [3, 3, 256, 128], [128])
     h_pool3 = max_pool_2x2(h_conv3)
 
 flat_dim = int(h_pool3.get_shape()[1]*h_pool3.get_shape()[2]*h_pool3.get_shape()[3])
 
-with tf.variable_scope("fullyconnected2"):
+with tf.variable_scope("3fullyconnected"):
     h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
     h_fc1 = full_relu(h_pool2_flat, [flat_dim, 150])
 
     keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
     
-with tf.variable_scope("output", reuse=True):
+with tf.variable_scope("3output", reuse=True):
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
