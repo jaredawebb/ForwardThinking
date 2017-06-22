@@ -121,10 +121,10 @@ learning_rate = tf.placeholder(tf.float32, shape=[])
 optimizer = tf.train.AdamOptimizer(learning_rate)
 
 train_steps = [optimizer.minimize(cross_entropy,
-                                  var_list=train_vars[i] + train_vars[-1]) for i in range(len(layers)-1)]
+                                  var_list=train_vars[i] + train_vars[-2] + train_vars[-1]) for i in range(len(layers)-w)]
 
 train_step = optimizer.minimize(cross_entropy)
-train_step_new = optimizer.minimize(cross_entropy, var_list=train_vars[-2] + train_vars[-1])
+train_step_new = optimizer.minimize(cross_entropy, var_list=train_vars[-3] + train_vars[-2] + train_vars[-1])
 
 correct_prediction = tf.equal(tf.argmax(y_conv_drop,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -132,8 +132,7 @@ init_op = tf.global_variables_initializer()
 
 
 epochs = 100
-cutoffs = [64, 82, 100]
-cutoffs = [2]
+cutoffs = [2, 16, 32, 64, 82, 100]
 learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
 
 lr = learning_rates[0]
@@ -176,21 +175,23 @@ for cutoff in cutoffs:
                 print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
 
             if i < cutoff*epoch_iter:
-                train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
-                                                                            y_: batch[1],
-                                                                            keep_prob1:0.3,
-                                                                            keep_prob2:0.5,
-                                                                            learning_rate:lr})
+                
+                #train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+                #                                                            y_: batch[1],
+                #                                                            keep_prob1:0.3,
+                #                                                            keep_prob2:0.5,
+                #                                                            learning_rate:lr})
+                
                 #train_steps[i % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
                 #                                                            y_: batch[1],
                 #                                                            keep_prob1:0.3,
                 #                                                            keep_prob2:0.5})
-                '''
+                
                 train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
                                                                             y_: batch[1],
                                                                             keep_prob1:0.3,
                                                                             keep_prob2:0.5})
-                '''
+                
             else:
                 if epoch_iter*cutoff == i:
                     print("Switching to output layer only.")
