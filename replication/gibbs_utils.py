@@ -39,7 +39,7 @@ x_test /= 255
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 
-def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[1e-4]):
+def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, learning_rates=[1e-4]):
     # Pass in the weights, freeze all but the first layer, and then update the weights
     
     train_accuracies = []
@@ -93,9 +93,9 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
     y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
     learning_rate = tf.placeholder(tf.float32, shape=[])
-    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
     train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
-    correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
+    correct_prediction = tf.equal(tf.argmax(y_conv_drop,1), tf.argmax(y_,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     lr = learning_rates[0]
@@ -103,10 +103,12 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
-        for i in range(epoch_iter):
-            # batch = mnist.train.next_batch(50)
+        for i in range(epoch_iter*mult):
+            
+            epoch_number = i // epoch_iter
+            
             batch = images.next()
-            if i%100 == 0 and i > 0:
+            if i%100 == 0:
                 train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
@@ -141,7 +143,7 @@ def layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
         
         
         
-def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[1e-4]):
+def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, learning_rates=[1e-4]):
     # Pass in the weights, freeze all but the first layer, and then update the weights
     
     train_accuracies = []
@@ -195,7 +197,7 @@ def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
     y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
     learning_rate = tf.placeholder(tf.float32, shape=[])
-    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
     train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
     correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -205,10 +207,10 @@ def layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rat
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
-        for i in range(epoch_iter):
+        for i in range(epoch_iter*mult):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
-            if i%100 == 0 and i > 0:
+            if i%100 == 0:
                 train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
@@ -295,7 +297,7 @@ def layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
     y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
     learning_rate = tf.placeholder(tf.float32, shape=[])
-    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
     train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
     correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -308,7 +310,7 @@ def layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
         for i in range(epoch_iter*mult):
             # batch = mnist.train.next_batch(50)
             batch = images.next()
-            if i%100 == 0 and i > 0:
+            if i%100 == 0:
                 train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
@@ -352,19 +354,19 @@ def layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=1, lear
                 #train_step = tf.train.AdamOptimizer(learning_rates[2]).minimize(cross_entropy)
                 #sess.run(tf.global_variables_initializer())
 
-            elif i == epoch_iter*20:
+            elif i == epoch_iter*30:
                 lr = learning_rates[3]
                 print("Learning Rate Updated to: " + str(lr))
                 #train_step = tf.train.AdamOptimizer(learning_rates[3]).minimize(cross_entropy)
                 #sess.run(tf.global_variables_initializer())
 
-            elif i == epoch_iter*40:
+            elif i == epoch_iter*50:
                 lr = learning_rates[4]
                 print("Learning Rate Updated to: " + str(lr))
                 #train_step = tf.train.AdamOptimizer(learning_rates[4]).minimize(cross_entropy)
                 #sess.run(tf.global_variables_initializer())
 
-            elif i == epoch_iter*60:
+            elif i == epoch_iter*70:
                 lr = learning_rates[5]
                 print("Learning Rate Updated to: " + str(lr))
                 #train_step = tf.train.AdamOptimizer(learning_rates[5]).minimize(cross_entropy)
@@ -418,7 +420,7 @@ def layer_4(weights, images, forward_accuracies, epoch_iter, mnist):
 
     y_conv_drop = tf.nn.dropout(y_conv, 0.5)
 
-    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
     train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
     correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -503,7 +505,7 @@ def layer_5(weights, images, forward_accuracies, epoch_iter, mnist):
 
     y_conv_drop = tf.nn.dropout(y_conv, 0.5)
 
-    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
     train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
     correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))

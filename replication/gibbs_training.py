@@ -98,7 +98,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 keep_prob2 = tf.placeholder(tf.float32, shape=[])
 y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -110,7 +110,7 @@ with tf.Session() as sess:
     for i in range(epoch_iter*epoch_sequence[0]):
         # batch = mnist.train.next_batch(50)
         batch = images.next()
-        if i%100 == 0 and i > 0:
+        if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
                                                       keep_prob1: 1., 
@@ -186,7 +186,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 keep_prob2 = tf.placeholder(tf.float32, shape=[])
 y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -198,7 +198,7 @@ with tf.Session() as sess:
     for i in range(epoch_iter*epoch_sequence[0]):
         # batch = mnist.train.next_batch(50)
         batch = images.next()
-        if i%100 == 0 and i > 0:
+        if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
                                                       keep_prob1: 1., 
@@ -277,7 +277,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 keep_prob2 = tf.placeholder(tf.float32, shape=[])
 y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -289,7 +289,7 @@ with tf.Session() as sess:
     for i in range(epoch_iter*epoch_sequence[0]):
         # batch = mnist.train.next_batch(50)
         batch = images.next()
-        if i%100 == 0 and i > 0:
+        if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
                                                       keep_prob1: 1., 
@@ -328,7 +328,7 @@ gibbs_epochs=10
 import gibbs_utils
 
 for i in range(gibbs_epochs):
-    print(i)
+    #print(i)
     if i % 3 == 0:
         gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.005])
     elif i % 3 == 1:
@@ -348,7 +348,29 @@ for i in range(gibbs_epochs):
     #elif i % 9 == 8:
     #    gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist)       
 
-gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=87, learning_rates=[0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005])
+#gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+#gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, mult=5, learning_rates=[0.002]*2)
+
+gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=30, learning_rates=[0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005])
+
+for i in range(gibbs_epochs):
+    #print(i)
+    if i % 3 == 0:
+        gibbs_utils.layer_1(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.001])
+    elif i % 3 == 1:
+        gibbs_utils.layer_2(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.001])
+    elif i % 3 == 2:
+        gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, learning_rates=[0.001])
+        
+gibbs_utils.layer_3(weights, images, forward_accuracies, epoch_iter, mnist, mult=37, learning_rates=[0.001, 0.0005, 0.0001, 0.00005])
 
 print(forward_accuracies[-10:])
 print(np.mean(forward_accuracies[-10:]))
