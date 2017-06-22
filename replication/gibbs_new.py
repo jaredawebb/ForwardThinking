@@ -132,7 +132,7 @@ init_op = tf.global_variables_initializer()
 
 
 epochs = 100
-cutoffs = [2, 16, 32, 64, 82, 100]
+cutoffs = [5, 16, 32, 64, 82, 100]
 learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
 
 lr = learning_rates[0]
@@ -201,7 +201,7 @@ for cutoff in cutoffs:
                 train_step_new.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                       keep_prob1:0.3, keep_prob2:0.5, learning_rate: lr})
                 
-            if i == epoch_iter*2:
+            if i == epoch_iter*5:
                 lr = learning_rates[1]
                 print("Learning Rate Updated to: " + str(lr))
                 #train_step = tf.train.AdamOptimizer(learning_rates[1]).minimize(cross_entropy)
