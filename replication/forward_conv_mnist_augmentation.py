@@ -34,7 +34,9 @@ def const_relu(input, constant):
     biases = tf.get_variable("biases", constant[1].shape,
                               initializer=tf.constant_initializer(constant[1]))
                              
-    return tf.nn.relu(tf.matmul(input, weights) + biases)
+    conv = tf.nn.conv2d(input, weights,
+        strides=[1, 1, 1, 1], padding='SAME')
+    return tf.nn.relu(conv + biases)
 
 def max_pool_2x2(x):
   return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
