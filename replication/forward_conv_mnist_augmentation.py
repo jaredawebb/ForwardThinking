@@ -88,7 +88,7 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 x_image = tf.reshape(x, [-1,28,28,1])
 
-with tf.variable_scope("layer1"):
+with tf.variable_scope("layer1", reuse=True):
     h_conv1 = conv_relu(x_image, [3, 3, 1, 256], [256])
     h_pool1 = max_pool_2x2(h_conv1)
 
@@ -196,11 +196,11 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 x_image = tf.reshape(x, [-1,28,28,1])
 
                              
-with tf.variable_scope("layer1"):
+with tf.variable_scope("layer1", reuse=True):
     h_conv1 = const_relu(x_image, weights[0])
     h_pool1 = max_pool_2x2(h_conv1)
 
-with tf.variable_scope("layer2"):
+with tf.variable_scope("layer2", reuse=True):
     h_conv2 = conv_relu(h_pool1, [3, 3, 256, 256], [256])
     h_pool2 = max_pool_2x2(h_conv2)
 
