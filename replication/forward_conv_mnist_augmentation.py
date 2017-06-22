@@ -10,16 +10,31 @@ from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
 from keras import backend as K
 
-def weight_variable(shape):
-  initial = tf.truncated_normal(shape, stddev=0.1)
-  return tf.Variable(initial)
+def conv_relu(input, kernel_shape, bias_shape):
+    # Create variable named "weights".
+    weights = tf.get_variable("weights", kernel_shape)#,
+        #initializer=tf.random_normal_initializer())
+    # Create variable named "biases".
+    biases = tf.get_variable("biases", bias_shape,
+        initializer=tf.constant_initializer(0.0))
+    conv = tf.nn.conv2d(input, weights,
+        strides=[1, 1, 1, 1], padding='SAME')
+    return tf.nn.relu(conv + biases)
 
-def bias_variable(shape):
-  initial = tf.constant(0.1, shape=shape)
-  return tf.Variable(initial)
+def full_relu(input, shape):
+    weights = tf.get_variable("weights", shape)#,
+                              #initializer=tf.random_normal_initializer())
+    biases = tf.get_variable("biases", [shape[1]],
+                              initializer=tf.constant_initializer(0.0))
+    return tf.nn.relu(tf.matmul(input, weights) + biases)
 
-def conv2d(x, W):
-  return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
+def const_relu(input, constant):
+    weights = tf.get_variable("weights", constant[0].shape,
+                              initializer=tf.constant_initializer(constant[0]))
+    biases = tf.get_variable("biases", constant[0].shape,
+                              initializer=tf.constant_initializer(constant[1]))
+                             
+    return tf.nn.relu(tf.matmul(input, weights) + biases)
 
 def max_pool_2x2(x):
   return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
@@ -73,36 +88,32 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 x_image = tf.reshape(x, [-1,28,28,1])
 
-W_conv1 = weight_variable([3, 3, 1, 256])
-b_conv1 = bias_variable([256])
-
-h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
-h_pool1 = max_pool_2x2(h_conv1)
+with tf.variable_scope("layer1"):
+    h_conv1 = conv_relu(x_image, [3, 3, 1, 256], [256])
+    h_pool1 = max_pool_2x2(h_conv1)
 
 flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
 
-W_fc1 = weight_variable([flat_dim, 150])
-b_fc1 = bias_variable([150])
+with tf.variable_scope("fullyconnected"):
+    h_pool1_flat = tf.reshape(h_pool1, [-1, flat_dim])
+    h_fc1 = full_relu(h_pool1_flat, [flat_dim, 150])
 
-h_pool1_flat = tf.reshape(h_pool1, [-1, flat_dim])
-h_fc1 = tf.nn.relu(tf.matmul(h_pool1_flat, W_fc1) + b_fc1)
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
+    
+with tf.variable_scope("output"):
+    y_conv = full_relu(h_fc1_drop, [150, 10])
 
-keep_prob1 = tf.placeholder(tf.float32, shape=[])
-h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
-
-W_fc2 = weight_variable([150, 10])
-b_fc2 = bias_variable([10])
-
-y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
-
-keep_prob2 = tf.placeholder(tf.float32, shape=[])
-y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
+    y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
 learning_rate = tf.placeholder(tf.float32, shape=[])
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
 train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+train_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'layer1')
 
 learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
 
@@ -172,7 +183,7 @@ with tf.Session() as sess:
     #                                                  y_: mnist.test.labels}))
     
         if i == epoch_iter-1:
-            weights.append((W_conv1.eval(), b_conv1.eval()))
+            weights.append((train_vars[0][0].eval(), train_vars[0][1].eval()))
             flag = False
     np.save('accuracies_layer1_aug', train_accuracies)
     print(len(forward_accuracies)) 
@@ -184,40 +195,29 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 x_image = tf.reshape(x, [-1,28,28,1])
 
-W_conv1 = tf.constant(weights[0][0])
-b_conv1 = tf.constant(weights[0][1])
+                             
+with tf.variable_scope("layer1"):
+    h_conv1 = const_relu(x_image, weights)
+    h_pool1 = max_pool_2x2(h_conv1)
 
-h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
-h_pool1 = max_pool_2x2(h_conv1)
-
-#######
-
-W_conv2 = weight_variable([3, 3, 256, 256])
-b_conv2 = bias_variable([256])
-
-h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
-h_pool2 = max_pool_2x2(h_conv2)
-
-#######
+with tf.variable_scope("layer2"):
+    h_conv2 = conv_relu(h_pool1, [3, 3, 256, 256], [256])
+    h_pool2 = max_pool_2x2(h_conv2)
 
 flat_dim = int(h_pool2.get_shape()[1]*h_pool2.get_shape()[2]*h_pool2.get_shape()[3])
 
-W_fc1 = weight_variable([flat_dim, 150])
-b_fc1 = bias_variable([150])
+with tf.variable_scope("fullyconnected"):
+    h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
+    h_fc1 = full_relu(h_pool2_flat, [flat_dim, 150])
 
-h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
-h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
+    
+with tf.variable_scope("output"):
+    y_conv = full_relu(h_fc1_drop, [150, 10])
 
-keep_prob1 = tf.placeholder(tf.float32, shape=[])
-h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
-
-W_fc2 = weight_variable([150, 10])
-b_fc2 = bias_variable([10])
-
-y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
-
-keep_prob2 = tf.placeholder(tf.float32, shape=[])
-y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
+    y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
 learning_rate = tf.placeholder(tf.float32, shape=[])
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
@@ -225,6 +225,8 @@ train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+train_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'layer1')
+                             
 learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
 
 flag = True
@@ -290,7 +292,7 @@ with tf.Session() as sess:
             #sess.run(tf.global_variables_initializer())
         
         if i == (epoch_iter - 1):
-            weights.append((W_conv2.eval(), b_conv2.eval()))
+            weights.append((train_vars[0][0].eval(), train_vars[0][1].eval()))
             flag = False
     np.save('accuracies_layer2_aug', train_accuracies)
     print(len(forward_accuracies))
@@ -302,48 +304,32 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 x_image = tf.reshape(x, [-1,28,28,1])
 
-W_conv1 = tf.constant(weights[0][0])#weight_variable([3, 3, 1, 256])
-b_conv1 = tf.constant(weights[0][1])
+with tf.variable_scope("layer1"):
+    h_conv1 = const_relu(x_image, weights[0])
+    h_pool1 = max_pool_2x2(h_conv1)
 
-h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
-h_pool1 = max_pool_2x2(h_conv1)
+with tf.variable_scope("layer2"):
+    h_conv2 = const_relu(h_pool1, weights[1])
+    h_pool2 = max_pool_2x2(h_conv2)
 
-#######
-
-W_conv2 = tf.constant(weights[1][0])
-b_conv2 = tf.constant(weights[1][1])
-
-h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
-h_pool2 = max_pool_2x2(h_conv2)
-
-#######
-
-W_conv3 = weight_variable([3, 3, 256, 128])
-b_conv3 = bias_variable([128])
-
-h_conv3 = tf.nn.relu(conv2d(h_pool2, W_conv3) + b_conv3)
-h_pool3 = max_pool_2x2(h_conv3)
-
-#######
+with tf.variable_scope("layer3"):
+    h_conv3 = conv_relu(h_pool2, [3, 3, 256, 128], [128])
+    h_pool3 = max_pool_2x2(h_conv3)
 
 flat_dim = int(h_pool3.get_shape()[1]*h_pool3.get_shape()[2]*h_pool3.get_shape()[3])
 
-W_fc1 = weight_variable([flat_dim, 150])
-b_fc1 = bias_variable([150])
+with tf.variable_scope("fullyconnected"):
+    h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
+    h_fc1 = full_relu(h_pool2_flat, [flat_dim, 150])
 
-h_pool3_flat = tf.reshape(h_pool3, [-1, flat_dim])
-h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
+    
+with tf.variable_scope("output"):
+    y_conv = full_relu(h_fc1_drop, [150, 10])
 
-keep_prob1 = tf.placeholder(tf.float32, shape=[])
-h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
-
-W_fc2 = weight_variable([150, 10])
-b_fc2 = bias_variable([10])
-
-y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
-
-keep_prob2 = tf.placeholder(tf.float32, shape=[])
-y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
+    y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
 learning_rate = tf.placeholder(tf.float32, shape=[])
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
