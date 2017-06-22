@@ -179,7 +179,8 @@ for cutoff in cutoffs:
                 train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
                                                                             y_: batch[1],
                                                                             keep_prob1:0.3,
-                                                                            keep_prob2:0.5})
+                                                                            keep_prob2:0.5,
+                                                                            learning_rate:lr})
                 #train_steps[i % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
                 #                                                            y_: batch[1],
                 #                                                            keep_prob1:0.3,
@@ -196,7 +197,7 @@ for cutoff in cutoffs:
                 #train_steps[-1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                 #                      keep_prob1:0.3, keep_prob2:0.5})
                 train_step_new.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
-                                      keep_prob1:0.3, keep_prob2:0.5})
+                                      keep_prob1:0.3, keep_prob2:0.5, learning_rate: lr})
                 
             if i == epoch_iter*2:
                 lr = learning_rates[1]
