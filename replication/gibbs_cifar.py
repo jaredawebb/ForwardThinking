@@ -68,7 +68,7 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 #x_image = tf.reshape(x, [-1,32,32,3])
 #######Layer 1
-with tf.variable_scope("layer1", reuse=True):
+with tf.variable_scope("layer1"):
     W_conv1 = weight_variable([3, 3, 3, 32])#weight_variable([3, 3, 1, 256])
     b_conv1 = bias_variable([32])
 
@@ -152,7 +152,9 @@ cutoffs = [16, 32, 64, 128, 256, 300]
 for cutoff in cutoffs:
     with tf.Session() as sess:
         sess.run(init_op)
-        accuracies = []    
+        accuracies = []
+        logs_path = '~/Documents/ForwardThinking/replication/logs/'
+        writer = tf.train.SummaryWriter(logs_path, graph=tf.get_default_graph())
         for i in range(epoch_iter*epochs):
             
             epoch_number = i // epoch_iter
