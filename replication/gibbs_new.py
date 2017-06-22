@@ -116,7 +116,9 @@ cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_
 
 layers = ['layer1', 'layer2', 'layer3', 'fullyconnected', 'output']
 train_vars = [tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, layer) for layer in layers]
-optimizer = tf.train.AdamOptimizer(1e-4)
+
+learning_rate = tf.placeholder(tf.float32, shape=[])
+optimizer = tf.train.AdamOptimizer(learning_rate)
 
 train_steps = [optimizer.minimize(cross_entropy,
                                   var_list=train_vars[i] + train_vars[-1]) for i in range(len(layers)-1)]
@@ -132,6 +134,9 @@ init_op = tf.global_variables_initializer()
 epochs = 100
 cutoffs = [64, 82, 100]
 cutoffs = [2]
+learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
+
+lr = learning_rates[0]
 for cutoff in cutoffs:
     with tf.Session() as sess:
         sess.run(init_op)
@@ -150,18 +155,19 @@ for cutoff in cutoffs:
                 train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
-                                                          keep_prob2: 1.})
+                                                          keep_prob2: 1.,
+                                                          learing_rate: lr})
 
-                acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1.})
-                acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1.})
-                acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000].reshape((1000, 784)), y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1.})
-                acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000].reshape((1000, 784)), y_: y_test[3000:4000], keep_prob1:1., keep_prob2:1.})
-                acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000].reshape((1000, 784)), y_: y_test[4000:5000], keep_prob1:1., keep_prob2:1.})
-                acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000].reshape((1000, 784)), y_: y_test[5000:6000], keep_prob1:1., keep_prob2:1.})
-                acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000].reshape((1000, 784)), y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1.})
-                acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000].reshape((1000, 784)), y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1.})
-                acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1.})
-                acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1.})
+                acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
+                acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
+                acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000].reshape((1000, 784)), y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
+                acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000].reshape((1000, 784)), y_: y_test[3000:4000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
+                acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000].reshape((1000, 784)), y_: y_test[4000:5000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
+                acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000].reshape((1000, 784)), y_: y_test[5000:6000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
+                acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000].reshape((1000, 784)), y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
+                acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000].reshape((1000, 784)), y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
+                acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
+                acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1., learning_rate: lr})
 
                 acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
 
@@ -192,4 +198,32 @@ for cutoff in cutoffs:
                 train_step_new.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)), y_: batch[1],
                                       keep_prob1:0.3, keep_prob2:0.5})
                 
-        np.save('accuracies_'+str(cutoff), accuracies)
+            if i == epoch_iter*2:
+                lr = learning_rates[1]
+                print("Learning Rate Updated to: " + str(lr))
+                #train_step = tf.train.AdamOptimizer(learning_rates[1]).minimize(cross_entropy)
+                #sess.run(tf.global_variables_initializer())
+
+            elif i == epoch_iter*10:
+                lr = learning_rates[2]
+                print("Learning Rate Updated to: " + str(lr))
+                #train_step = tf.train.AdamOptimizer(learning_rates[2]).minimize(cross_entropy)
+                #sess.run(tf.global_variables_initializer())
+
+            elif i == epoch_iter*40:
+                lr = learning_rates[3]
+                print("Learning Rate Updated to: " + str(lr))
+                #train_step = tf.train.AdamOptimizer(learning_rates[3]).minimize(cross_entropy)
+                #sess.run(tf.global_variables_initializer())
+
+            elif i == epoch_iter*60:
+                lr = learning_rates[4]
+                print("Learning Rate Updated to: " + str(lr))
+                #train_step = tf.train.AdamOptimizer(learning_rates[4]).minimize(cross_entropy)
+                #sess.run(tf.global_variables_initializer())
+
+            elif i == epoch_iter*80:
+                lr = learning_rates[5]
+                print("Learning Rate Updated to: " + str(lr))
+
+            np.save('accuracies_'+str(cutoff), accuracies)

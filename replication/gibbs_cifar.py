@@ -8,14 +8,21 @@ from keras.preprocessing.image import ImageDataGenerator
 
 def conv_relu(input, kernel_shape, bias_shape):
     # Create variable named "weights".
-    weights = tf.get_variable("weights", kernel_shape,
-        initializer=tf.random_normal_initializer())
+    weights = tf.get_variable("weights", kernel_shape)#,
+        #initializer=tf.random_normal_initializer())
     # Create variable named "biases".
-    biases = tf.get_variable("biases", bias_shape,
-        initializer=tf.constant_initializer(0.0))
+    biases = tf.get_variable("biases", bias_shape)#,
+        #initializer=tf.constant_initializer(0.0))
     conv = tf.nn.conv2d(input, weights,
         strides=[1, 1, 1, 1], padding='SAME')
     return tf.nn.relu(conv + biases)
+
+def full_relu(input, shape):
+    weights = tf.get_variable("weights", shape)#,
+                              #initializer=tf.random_normal_initializer())
+    biases = tf.get_variable("biases", [shape[1]],
+                              initializer=tf.constant_initializer(0.0))
+    return tf.nn.relu(tf.matmul(input, weights) + biases)
 
 def weight_variable(shape):
   initial = tf.truncated_normal(shape, stddev=0.1)
@@ -110,22 +117,18 @@ with tf.variable_scope("layer6"):
 
 flat_dim = int(h_conv6.get_shape()[1]*h_conv6.get_shape()[2]*h_conv6.get_shape()[3])
 
+#######Fully Connected Layer
 with tf.variable_scope("fullyconnected"):
-    W_fc1 = weight_variable([flat_dim, 256])
-    b_fc1 = bias_variable([256])
-
     h_conv6_flat = tf.reshape(h_conv6, [-1, flat_dim])
-    h_fc1 = tf.nn.relu(tf.matmul(h_conv6_flat, W_fc1) + b_fc1)
+    h_fc1 = full_relu(h_conv6, [flat_dim, 256])
 
     keep_prob3 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob3)
 
+#######Output Layer
 with tf.variable_scope("output"):
-    W_fc2 = weight_variable([256, 10])
-    b_fc2 = bias_variable([10])
+    y_conv = full_relu(h_fc1_drop, [256, 10])
     
-    y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
-
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
 
 layers = ['layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'fullyconnected', 'output']
@@ -182,14 +185,16 @@ for cutoff in cutoffs:
                 accuracies.append(acc)
 
                 print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
-            print([np.max(weight[0].eval()) for weight in train_vars])
+            #print([np.max(weight[0].eval()) for weight in train_vars])
 
 
             
-            if choice == 0:
+            #if choice == 0:
+            if i < 2*epoch_iter:
                 train_step.run(feed_dict={x: batch[0], y_: batch[1],
                                           keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
-            elif choice == 1:
+            #elif choice == 1:
+            else:
                 if i < cutoff*epoch_iter:
                     train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
                                                                                 y_: batch[1],
