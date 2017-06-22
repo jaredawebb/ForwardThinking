@@ -197,7 +197,7 @@ x_image = tf.reshape(x, [-1,28,28,1])
 
                              
 with tf.variable_scope("layer1"):
-    h_conv1 = const_relu(x_image, weights)
+    h_conv1 = const_relu(x_image, weights[0])
     h_pool1 = max_pool_2x2(h_conv1)
 
 with tf.variable_scope("layer2"):
