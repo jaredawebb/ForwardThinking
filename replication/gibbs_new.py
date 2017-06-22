@@ -121,7 +121,7 @@ learning_rate = tf.placeholder(tf.float32, shape=[])
 optimizer = tf.train.AdamOptimizer(learning_rate)
 
 train_steps = [optimizer.minimize(cross_entropy,
-                                  var_list=train_vars[i] + train_vars[-2] + train_vars[-1]) for i in range(len(layers)-w)]
+                                  var_list=train_vars[i] + train_vars[-2] + train_vars[-1]) for i in range(len(layers)-2)]
 
 train_step = optimizer.minimize(cross_entropy)
 train_step_new = optimizer.minimize(cross_entropy, var_list=train_vars[-3] + train_vars[-2] + train_vars[-1])
