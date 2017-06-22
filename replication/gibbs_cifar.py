@@ -6,6 +6,17 @@ from keras import backend as K
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 
+def conv_relu(input, kernel_shape, bias_shape):
+    # Create variable named "weights".
+    weights = tf.get_variable("weights", kernel_shape,
+        initializer=tf.random_normal_initializer())
+    # Create variable named "biases".
+    biases = tf.get_variable("biases", bias_shape,
+        initializer=tf.constant_initializer(0.0))
+    conv = tf.nn.conv2d(input, weights,
+        strides=[1, 1, 1, 1], padding='SAME')
+    return tf.nn.relu(conv + biases)
+
 def weight_variable(shape):
   initial = tf.truncated_normal(shape, stddev=0.1)
   return tf.Variable(initial)
@@ -69,51 +80,33 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 #x_image = tf.reshape(x, [-1,32,32,3])
 #######Layer 1
 with tf.variable_scope("layer1"):
-    W_conv1 = weight_variable([3, 3, 3, 32])#weight_variable([3, 3, 1, 256])
-    b_conv1 = bias_variable([32])
-
-h_conv1 = tf.nn.relu(conv2d(x, W_conv1) + b_conv1)
+    h_conv1 = conv_relu(x, [3, 3, 3, 32], [32])
 
 #######Layer 2
 with tf.variable_scope("layer2"):
-    W_conv2 = weight_variable([3, 3, 32, 32])
-    b_conv2 = bias_variable([32])
-
-h_conv2 = tf.nn.relu(conv2d(h_conv1, W_conv2) + b_conv2)
-h_pool2 = max_pool_2x2(h_conv2)
-keep_prob1 = tf.placeholder(tf.float32, shape=[])
-h_drop2 = tf.nn.dropout(h_pool2, keep_prob1)
+    h_conv2 = conv_relu(h_conv1, [3, 3, 32, 32], [32])
+    h_pool2 = max_pool_2x2(h_conv2)
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_drop2 = tf.nn.dropout(h_pool2, keep_prob1)
 
 #######Layer 3
 with tf.variable_scope("layer3"):
-    W_conv3 = weight_variable([3, 3, 32, 64])
-    b_conv3 = bias_variable([64])
-
-h_conv3 = tf.nn.relu(conv2d(h_drop2, W_conv3) + b_conv3)
+    h_conv3 = conv_relu(h_drop2, [3, 3, 32, 64], [64])
 
 #######Layer 4
 with tf.variable_scope("layer4"):
-    W_conv4 = weight_variable([3, 3, 64, 64])
-    b_conv4 = bias_variable([64])
-
-h_conv4 = tf.nn.relu(conv2d(h_conv3, W_conv4) + b_conv4)
-h_pool4 = max_pool_2x2(h_conv4)
-keep_prob2 = tf.placeholder(tf.float32, shape=[])
-h_drop4 = tf.nn.dropout(h_pool4, keep_prob2)
+    h_conv4 = conv_relu(h_conv3, [3, 3, 64, 64], [64])
+    h_pool4 = max_pool_2x2(h_conv4)
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
+    h_drop4 = tf.nn.dropout(h_pool4, keep_prob2)
 
 #######Layer 5
 with tf.variable_scope("layer5"):
-    W_conv5 = weight_variable([3, 3, 64, 128])
-    b_conv5 = bias_variable([128])
-
-h_conv5 = tf.nn.relu(conv2d(h_drop4, W_conv5) + b_conv5)
+    h_conv5 = conv_relu(h_drop4, [3, 3, 64, 128], [128])
 
 #######Layer 6
 with tf.variable_scope("layer6"):
-    W_conv6 = weight_variable([3, 3, 128, 128])
-    b_conv6 = bias_variable([128])
-
-h_conv6 = tf.nn.relu(conv2d(h_conv5, W_conv6) + b_conv6)
+    h_conv6 = conv_relu(h_conv5, [3, 3, 128, 128], [128])
 
 flat_dim = int(h_conv6.get_shape()[1]*h_conv6.get_shape()[2]*h_conv6.get_shape()[3])
 
@@ -121,17 +114,17 @@ with tf.variable_scope("fullyconnected"):
     W_fc1 = weight_variable([flat_dim, 256])
     b_fc1 = bias_variable([256])
 
-h_conv6_flat = tf.reshape(h_conv6, [-1, flat_dim])
-h_fc1 = tf.nn.relu(tf.matmul(h_conv6_flat, W_fc1) + b_fc1)
+    h_conv6_flat = tf.reshape(h_conv6, [-1, flat_dim])
+    h_fc1 = tf.nn.relu(tf.matmul(h_conv6_flat, W_fc1) + b_fc1)
 
-keep_prob3 = tf.placeholder(tf.float32, shape=[])
-h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob3)
+    keep_prob3 = tf.placeholder(tf.float32, shape=[])
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob3)
 
 with tf.variable_scope("output"):
     W_fc2 = weight_variable([256, 10])
     b_fc2 = bias_variable([10])
     
-y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
+    y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
 
@@ -139,8 +132,8 @@ layers = ['layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'fullyconn
 train_vars = [tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, layer) for layer in layers]
 optimizer = tf.train.AdamOptimizer(1e-4)
 
-#train_steps = [optimizer.minimize(cross_entropy,
-#                                  var_list=train_vars[i] + train_vars[-1]) for i in range(len(layers)-1)]
+train_steps = [optimizer.minimize(cross_entropy,
+                                  var_list=train_vars[i] + train_vars[-1]) for i in range(len(layers)-1)]
 train_step = optimizer.minimize(cross_entropy)
 
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
@@ -149,6 +142,7 @@ init_op = tf.global_variables_initializer()
 
 epochs = 300
 cutoffs = ['none']
+choice = 1
 for cutoff in cutoffs:
     with tf.Session() as sess:
         sess.run(init_op)
@@ -188,29 +182,32 @@ for cutoff in cutoffs:
                 accuracies.append(acc)
 
                 print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
-            #print(np.max(W_conv1.eval()))
+            print([np.max(weight[0].eval()) for weight in train_vars])
 
-            train_step.run(feed_dict={x: batch[0], y_: batch[1],
-                                      keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
+
             
-            #if i < cutoff*epoch_iter:
-            #    train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
-            #                                                                y_: batch[1],
-            #                                                                keep_prob1:0.5,
-            #                                                                keep_prob2:0.5,
-            #                                                                keep_prob3:0.5})
-                
-            #    train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0],
-            #                                                                y_: batch[1],
-            #                                                                keep_prob1:0.5,
-            #                                                                keep_prob2:0.5,
-            #                                                                keep_prob3:0.5})
+            if choice == 0:
+                train_step.run(feed_dict={x: batch[0], y_: batch[1],
+                                          keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
+            elif choice == 1:
+                if i < cutoff*epoch_iter:
+                    train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
+                                                                                y_: batch[1],
+                                                                                keep_prob1:0.5,
+                                                                                keep_prob2:0.5,
+                                                                                keep_prob3:0.5})
 
-            #else:
-            #    if epoch_iter*cutoff == i:
-            #        print("Switching to output layer only.")
-            #    train_steps[-1].run(feed_dict={x: batch[0], y_: batch[1],
-            #                          keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
+                #    train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0],
+                #                                                                y_: batch[1],
+                #                                                                keep_prob1:0.5,
+                #                                                                keep_prob2:0.5,
+                #                                                                keep_prob3:0.5})
+
+                else:
+                    if epoch_iter*cutoff == i:
+                        print("Switching to output layer only.")
+                    train_steps[-1].run(feed_dict={x: batch[0], y_: batch[1],
+                                          keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
                 
         np.save('accuracies_gibbs_'+str(cutoff), accuracies)
 
