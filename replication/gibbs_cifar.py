@@ -11,8 +11,8 @@ def conv_relu(input, kernel_shape, bias_shape):
     weights = tf.get_variable("weights", kernel_shape)#,
         #initializer=tf.random_normal_initializer())
     # Create variable named "biases".
-    biases = tf.get_variable("biases", bias_shape)#,
-        #initializer=tf.constant_initializer(0.0))
+    biases = tf.get_variable("biases", bias_shape,
+        initializer=tf.constant_initializer(0.0))
     conv = tf.nn.conv2d(input, weights,
         strides=[1, 1, 1, 1], padding='SAME')
     return tf.nn.relu(conv + biases)
@@ -196,7 +196,7 @@ for cutoff in cutoffs:
 
             
             #if choice == 0:
-            if i < 2*epoch_iter:
+            if i < 5*epoch_iter:
                 train_step.run(feed_dict={x: batch[0], y_: batch[1],
                                           keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
             #elif choice == 1:
