@@ -136,7 +136,8 @@ train_vars = [tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, layer) for lay
 optimizer = tf.train.AdamOptimizer(1e-4)
 
 train_steps = [optimizer.minimize(cross_entropy,
-                                  var_list=train_vars[i] + train_vars[-1]) for i in range(len(layers)-1)]
+                                  var_list=train_vars[i] + train_vars[-2] + train_vars[-1]) for i in range(len(layers)-2)]
+
 train_step = optimizer.minimize(cross_entropy)
 
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
