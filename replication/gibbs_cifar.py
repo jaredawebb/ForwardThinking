@@ -144,7 +144,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 init_op = tf.global_variables_initializer()
 
 epochs = 300
-cutoffs = ['none']
+cutoffs = [50, 100, 150, 250, 300]
 choice = 1
 for cutoff in cutoffs:
     with tf.Session() as sess:
