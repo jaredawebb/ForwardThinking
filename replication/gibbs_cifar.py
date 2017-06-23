@@ -154,7 +154,7 @@ for cutoff in cutoffs:
         accuracies = []
         #logs_path = '~/Documents/ForwardThinking/replication/logs/'
         #writer = tf.train.SummaryWriter(logs_path, graph=tf.get_default_graph())
-        for i in range(epoch_iter*10):
+        for i in range(epoch_iter*epochs):
             
             epoch_number = i // epoch_iter
             
