@@ -84,32 +84,36 @@ epoch_iter = len(x_train) // batch_size
 x = tf.placeholder(tf.float32, shape=[None, 32, 32, 3])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
+#backprop: 128 (3,3) -> 128 (3,3) -> dropout(.3) -> maxpool(size=(2,2)) -> 128 (3,3) -> 128 (3,3) -> dropout(.3) -> maxpool(size=(2,2)) -> 128 (3,3) -> 128 (3,3) -> FC 512 -> dropout(.5) -> Softmax 10
+
 #x_image = tf.reshape(x, [-1,32,32,3])
 #######Layer 1
 with tf.variable_scope("layer1"):
-    h_conv1 = conv_relu(x, [3, 3, 3, 32], [32])
+    h_conv1 = conv_relu(x, [3, 3, 3, 128], [128])
 
 #######Layer 2
 with tf.variable_scope("layer2"):
-    h_conv2 = conv_relu(h_conv1, [3, 3, 32, 32], [32])
+    h_conv2 = conv_relu(h_conv1, [3, 3, 128, 128], [128])
     h_pool2 = max_pool_2x2(h_conv2)
     keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_drop2 = tf.nn.dropout(h_pool2, keep_prob1)
+    
 
 #######Layer 3
 with tf.variable_scope("layer3"):
-    h_conv3 = conv_relu(h_drop2, [3, 3, 32, 64], [64])
+    h_conv3 = conv_relu(h_drop2, [3, 3, 128, 128], [128])
 
 #######Layer 4
 with tf.variable_scope("layer4"):
-    h_conv4 = conv_relu(h_conv3, [3, 3, 64, 64], [64])
+    h_conv4 = conv_relu(h_conv3, [3, 3, 128, 128], [128])
     h_pool4 = max_pool_2x2(h_conv4)
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
     h_drop4 = tf.nn.dropout(h_pool4, keep_prob2)
 
+
 #######Layer 5
 with tf.variable_scope("layer5"):
-    h_conv5 = conv_relu(h_drop4, [3, 3, 64, 128], [128])
+    h_conv5 = conv_relu(h_drop4, [3, 3, 128, 128], [128])
 
 #######Layer 6
 with tf.variable_scope("layer6"):
@@ -120,14 +124,14 @@ flat_dim = int(h_conv6.get_shape()[1]*h_conv6.get_shape()[2]*h_conv6.get_shape()
 #######Fully Connected Layer
 with tf.variable_scope("fullyconnected"):
     h_conv6_flat = tf.reshape(h_conv6, [-1, flat_dim])
-    h_fc1 = full_relu(h_conv6_flat, [flat_dim, 256])
+    h_fc1 = full_relu(h_conv6_flat, [flat_dim, 512])
 
     keep_prob3 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob3)
 
 #######Output Layer
 with tf.variable_scope("output"):
-    y_conv = full_relu(h_fc1_drop, [256, 10])
+    y_conv = full_relu(h_fc1_drop, [512, 10])
     
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
 
@@ -144,8 +148,8 @@ correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 init_op = tf.global_variables_initializer()
 
-epochs = 300
-cutoffs = [50, 100, 150, 250, 300]
+epochs = 200
+cutoffs = [50, 100, 150, 200]
 #cutoffs = [10]
 choice = 1
 for cutoff in cutoffs:
@@ -194,7 +198,7 @@ for cutoff in cutoffs:
             #if choice == 0:
             if i < 2*epoch_iter:
                 train_step.run(feed_dict={x: batch[0], y_: batch[1],
-                                          keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
+                                          keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
             #elif choice == 1:
             else:
                 if i < cutoff*epoch_iter:
@@ -206,15 +210,15 @@ for cutoff in cutoffs:
 
                     train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0],
                                                                                 y_: batch[1],
-                                                                                keep_prob1:0.5,
-                                                                                keep_prob2:0.5,
+                                                                                keep_prob1:0.3,
+                                                                                keep_prob2:0.3,
                                                                                 keep_prob3:0.5})
 
                 else:
                     if epoch_iter*cutoff == i:
                         print("Switching to output layer only.")
                     train_steps[-1].run(feed_dict={x: batch[0], y_: batch[1],
-                                          keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
+                                          keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
                 
         np.save('accuracies_gibbs_'+str(cutoff), accuracies)
 
@@ -258,7 +262,7 @@ for cutoff in cutoffs:
             #if choice == 0:
 
             train_step.run(feed_dict={x: batch[0], y_: batch[1],
-                                      keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
+                                      keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
         np.save('accuracies_gibbs_pretrain_'+str(cutoff), accuracies)
 
 
