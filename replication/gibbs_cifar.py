@@ -40,7 +40,7 @@ def max_pool_2x2(x):
                         strides=[1, 2, 2, 1], padding='SAME')
 
 
-batch_size = 128
+batch_size = 32
 num_classes = 10
 img_rows, img_cols = 32, 32
 # the data, shuffled and split between train and test sets
