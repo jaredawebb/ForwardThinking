@@ -146,7 +146,7 @@ init_op = tf.global_variables_initializer()
 
 epochs = 300
 cutoffs = [50, 100, 150, 250, 300]
-cutoffs = [10]
+#cutoffs = [10]
 choice = 1
 for cutoff in cutoffs:
     with tf.Session() as sess:
@@ -154,7 +154,7 @@ for cutoff in cutoffs:
         accuracies = []
         #logs_path = '~/Documents/ForwardThinking/replication/logs/'
         #writer = tf.train.SummaryWriter(logs_path, graph=tf.get_default_graph())
-        for i in range(epoch_iter*epochs):
+        for i in range(epoch_iter*10):
             
             epoch_number = i // epoch_iter
             
