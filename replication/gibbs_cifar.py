@@ -146,6 +146,7 @@ init_op = tf.global_variables_initializer()
 
 epochs = 300
 cutoffs = [50, 100, 150, 250, 300]
+cutoffs = [10]
 choice = 1
 for cutoff in cutoffs:
     with tf.Session() as sess:
@@ -216,5 +217,48 @@ for cutoff in cutoffs:
                                           keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
                 
         np.save('accuracies_gibbs_'+str(cutoff), accuracies)
+
+        accuracies = []
+        for i in range(epoch_iter*20):
+            epoch_number = i // epoch_iter
+            
+            batch = images.next()
+
+            if i % epoch_iter == 0:
+                print("Starting Epoch %d of %d" % (i // epoch_iter, epochs))
+                #print("Starting Epoch %d of %d, Training Layer %d" % (i // epoch_iter, epochs, epoch_number // len(train_steps))
+
+            if i%100 == 0:
+                train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
+                                                          y_: batch[1],
+                                                          keep_prob1: 1., 
+                                                          keep_prob2: 1.,
+                                                          keep_prob3: 1.})
+
+                acc1 = accuracy.eval(feed_dict={x: x_test[:1000], y_: y_test[:1000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000], y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000], y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000], y_: y_test[3000:4000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000], y_: y_test[4000:5000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000], y_: y_test[5000:6000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000], y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000], y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000], y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+                acc10 = accuracy.eval(feed_dict={x: x_test[9000:], y_: y_test[9000:], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
+
+                acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
+
+                accuracies.append(acc)
+
+                print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
+            #print([np.max(weight[0].eval()) for weight in train_vars])
+
+
+            
+            #if choice == 0:
+
+            train_step.run(feed_dict={x: batch[0], y_: batch[1],
+                                      keep_prob1:0.5, keep_prob2:0.5, keep_prob3:0.5})
+        np.save('accuracies_gibbs_pretrain_'+str(cutoff), accuracies)
 
 
