@@ -149,8 +149,8 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 init_op = tf.global_variables_initializer()
 
 epochs = 200
-cutoffs = [50, 100, 150, 200]
-#cutoffs = [10]
+#cutoffs = [50, 100, 150, 200]
+cutoffs = [10]
 choice = 1
 for cutoff in cutoffs:
     with tf.Session() as sess:
@@ -196,32 +196,32 @@ for cutoff in cutoffs:
 
             
             #if choice == 0:
-            if i < 5*epoch_iter:
+            if i < 200*epoch_iter:
                 train_step.run(feed_dict={x: batch[0], y_: batch[1],
                                           keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
             #elif choice == 1:
-            else:
-                if i < cutoff*epoch_iter:
-                    #train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
+            #else:
+            #    if i < cutoff*epoch_iter:
+            #        train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
+            #                                                                   y_: batch[1],
+            #                                                                    keep_prob1:0.3,
+            #                                                                    keep_prob2:0.3,
+            #                                                                    keep_prob3:0.5})
+
+                    #train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0],
                     #                                                            y_: batch[1],
-                    #                                                            keep_prob1:0.5,
-                    #                                                            keep_prob2:0.5,
+                    #                                                            keep_prob1:0.3,
+                    #                                                            keep_prob2:0.3,
                     #                                                            keep_prob3:0.5})
 
-                    train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0],
-                                                                                y_: batch[1],
-                                                                                keep_prob1:0.3,
-                                                                                keep_prob2:0.3,
-                                                                                keep_prob3:0.5})
-
-                else:
-                    if epoch_iter*cutoff == i:
-                        print("Switching to output layer only.")
-                    train_steps[-1].run(feed_dict={x: batch[0], y_: batch[1],
-                                          keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
+            #    else:
+            #        if epoch_iter*cutoff == i:
+            #            print("Switching to output layer only.")
+            #        train_steps[-1].run(feed_dict={x: batch[0], y_: batch[1],
+            #                              keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
                 
-        np.save('accuracies_gibbs_'+str(cutoff), accuracies)
-
+        np.save('backprop_cifar'+str(cutoff), accuracies)
+        '''
         accuracies = []
         for i in range(epoch_iter*20):
             epoch_number = i // epoch_iter
@@ -263,6 +263,6 @@ for cutoff in cutoffs:
 
             train_step.run(feed_dict={x: batch[0], y_: batch[1],
                                       keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
-        np.save('accuracies_gibbs_pretrain_'+str(cutoff), accuracies)
-
+        np.save('o_accuracies_gibbs_pretrain_'+str(cutoff), accuracies)
+        '''
 
