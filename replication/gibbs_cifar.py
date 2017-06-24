@@ -165,7 +165,7 @@ for cutoff in cutoffs:
             batch = images.next()
 
             if i % epoch_iter == 0:
-                print("Starting Epoch %d of %d" % (i // epoch_iter, epochs))
+                print("Starting Epoch %d of %d" % (i // epoch_iter, epochs), flush=True)
                 #print("Starting Epoch %d of %d, Training Layer %d" % (i // epoch_iter, epochs, epoch_number // len(train_steps))
 
             if i%100 == 0:
@@ -190,7 +190,7 @@ for cutoff in cutoffs:
 
                 accuracies.append(acc)
 
-                print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
+                print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc), flush=True)
             #print([np.max(weight[0].eval()) for weight in train_vars])
 
 
