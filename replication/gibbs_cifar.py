@@ -1,7 +1,6 @@
 import tensorflow as tf
 import numpy as np
 import sys
-sys.stdout.flush()
 
 import keras
 from keras import backend as K
@@ -201,6 +200,7 @@ for cutoff in cutoffs:
             if i < 200*epoch_iter:
                 train_step.run(feed_dict={x: batch[0], y_: batch[1],
                                           keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
+            sys.stdout.flush()
             #elif choice == 1:
             #else:
             #    if i < cutoff*epoch_iter:
