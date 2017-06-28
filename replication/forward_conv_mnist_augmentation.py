@@ -39,6 +39,7 @@ def const_relu(input, constant):
     return tf.nn.relu(conv + biases)
 
 def max_pool_2x2(x):
+    print('hey. Sup.')
     return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                         strides=[1, 2, 2, 1], padding='SAME')
 
