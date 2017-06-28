@@ -231,9 +231,11 @@ for cutoff in cutoffs:
                                           keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
             sys.stdout.flush()
             
+            '''
             if (len(accuracies) > 80):
                 if (np.mean(accuracies[-80:]) - accuracies[-1]) < 0.0000001:
+                    print(np.mean(accuracies
                     print("HEY!  STOP!")
                     break
-            
+            '''
         np.save('./results/decay_cifar_'+str(cutoff), accuracies)
