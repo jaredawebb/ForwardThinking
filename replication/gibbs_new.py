@@ -137,7 +137,7 @@ init_op = tf.global_variables_initializer()
 
 
 epochs = 100
-cutoffs = [5, 16, 32, 64, 82, 100]
+cutoffs = [64, 82, 100]
 learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
 
 lr = learning_rates[0]
