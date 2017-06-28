@@ -96,12 +96,11 @@ with tf.variable_scope("1layer1"):
     h_conv1 = conv_relu(x_image, [3, 3, 1, 256], [256])
     h_pool1 = max_pool_2x2(h_conv1)
     
-flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
+    flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
+    h_pool1_flat = tf.reshape(h_poo11, [-1, flat_dim])
 
 with tf.variable_scope("1fullyconnected"):
-    h_pool1_flat = tf.reshape(h_poo11, [-1, flat_dim])
-    
-    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+        keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_poo11_drop = tf.nn.dropout(h_pool1_flat, keep_prob1)
     
     h_fc1 = full_relu(h_pool1_drop, [flat_dim, 150])
