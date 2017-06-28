@@ -352,7 +352,7 @@ with tf.variable_scope("3output"):
 print(y_conv.get_shape())
     
 learning_rate = tf.placeholder(tf.float32, shape=[])
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
 train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
