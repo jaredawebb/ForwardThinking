@@ -95,17 +95,16 @@ x_image = tf.reshape(x, [-1,28,28,1])
 with tf.variable_scope("1layer1"):
     h_conv1 = conv_relu(x_image, [3, 3, 1, 256], [256])
     h_pool1 = max_pool_2x2(h_conv1)
-
-    keep_prob1 = tf.placeholder(tf.float32, shape=[])
-    print("YES")
-    h_poo11_drop = tf.nn.dropout(h_pool1, keep_prob1)
-    print(h_pool1_drop.get_shape())
     
 flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
 
 with tf.variable_scope("1fullyconnected"):
-    h_pool1_flat = tf.reshape(h_poo11_drop, [-1, flat_dim])
-    h_fc1 = full_relu(h_pool1_flat, [flat_dim, 150])
+    h_pool1_flat = tf.reshape(h_poo11, [-1, flat_dim])
+    
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_poo11_drop = tf.nn.dropout(h_pool1_flat, keep_prob1)
+    
+    h_fc1 = full_relu(h_pool1_drop, [flat_dim, 150])
 
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob2)
@@ -214,15 +213,16 @@ with tf.variable_scope("2layer1"):
 with tf.variable_scope("2layer2"):
     h_conv2 = conv_relu(h_pool1, [3, 3, 256, 256], [256])
     h_pool2 = max_pool_2x2(h_conv2)
-    
-    keep_prob1 = tf.placeholder(tf.float32, shape=[])
-    h_pool2_drop = tf.nn.dropout(h_pool2, keep_prob1)
 
 flat_dim = int(h_pool2.get_shape()[1]*h_pool2.get_shape()[2]*h_pool2.get_shape()[3])
 
 with tf.variable_scope("2fullyconnected"):
     h_pool2_flat = tf.reshape(h_pool2_drop, [-1, flat_dim])
-    h_fc1 = full_relu(h_pool2_flat, [flat_dim, 150])
+    
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_pool2_drop = tf.nn.dropout(h_pool2_flat, keep_prob1)
+    
+    h_fc1 = full_relu(h_pool2_drop, [flat_dim, 150])
 
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob2)
@@ -330,16 +330,16 @@ with tf.variable_scope("3layer2"):
 with tf.variable_scope("3layer3"):
     h_conv3 = conv_relu(h_pool2, [3, 3, 256, 128], [128])
     h_pool3 = max_pool_2x2(h_conv3)
-
-    keep_prob1 = tf.placeholder(tf.float32, shape=[])
-    h_pool3_drop = tf.nn.dropout(h_pool3, keep_prob1)
-    
     
 flat_dim = int(h_pool3.get_shape()[1]*h_pool3.get_shape()[2]*h_pool3.get_shape()[3])
 
 with tf.variable_scope("3fullyconnected"):
     h_pool3_flat = tf.reshape(h_pool3_drop, [-1, flat_dim])
-    h_fc1 = full_relu(h_pool3_flat, [flat_dim, 150])
+    
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_pool3_drop = tf.nn.dropout(h_pool3_flat, keep_prob1)
+    
+    h_fc1 = full_relu(h_pool3_drop, [flat_dim, 150])
 
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob2)
