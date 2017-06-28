@@ -1,3 +1,5 @@
+# Tanner best: 256, 256, 5,5 mid
+
 import tensorflow as tf
 import numpy as np
 import sys
@@ -230,7 +232,8 @@ for cutoff in cutoffs:
             sys.stdout.flush()
             
             if (len(accuracies) > 80):
-                if (np.mean(accuracies[-80:]) - accuracies[-1]) < 0.001:
+                if (np.mean(accuracies[-80:]) - accuracies[-1]) < 0.0000001:
+                    print("HEY!  STOP!")
                     break
             
         np.save('./results/decay_cifar_'+str(cutoff), accuracies)
