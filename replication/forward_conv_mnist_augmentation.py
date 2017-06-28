@@ -96,6 +96,7 @@ x_image = tf.reshape(x, [-1,28,28,1])
 with tf.variable_scope("1layer1"):
     h_conv1 = conv_relu(x_image, [3, 3, 1, 256], [256])
     h_pool1 = max_pool_2x2(h_conv1)
+    print(h_pool1)
     
     flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
     h_pool1_flat = tf.reshape(h_poo11, [-1, flat_dim])
