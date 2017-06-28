@@ -138,20 +138,26 @@ cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_
 
 layers = ['layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'fullyconnected', 'output']
 train_vars = [tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, layer) for layer in layers]
-optimizer = tf.train.AdamOptimizer(1e-4)
+
+global_step = tf.Variable(0, trainable=False)
+starter_learning_rate = 0.1
+learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
+                                           100000, 0.96, staircase=True)
+
+optimizer = tf.train.AdamOptimizer(learning_rate)
 
 train_steps = [optimizer.minimize(cross_entropy,
-                                  var_list=train_vars[i] + train_vars[-2] + train_vars[-1]) for i in range(len(layers)-2)]
+                                  var_list=train_vars[i] + train_vars[-2] + train_vars[-1],
+                                  global_step=global_step) for i in range(len(layers)-2)]
 
-train_step = optimizer.minimize(cross_entropy)
+train_step = optimizer.minimize(cross_entropy, global_step=global_step)
 
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 init_op = tf.global_variables_initializer()
 
 epochs = 200
-#cutoffs = [50, 100, 150, 200]
-cutoffs = [10]
+cutoffs = [100, 150, 200]
 choice = 1
 for cutoff in cutoffs:
     with tf.Session() as sess:
@@ -196,19 +202,19 @@ for cutoff in cutoffs:
 
 
             
-            #if choice == 0:
-            if i < 200*epoch_iter:
-                train_step.run(feed_dict={x: batch[0], y_: batch[1],
+            if choice == 0:
+                if i < cutoff*epoch_iter:
+                    train_step.run(feed_dict={x: batch[0], y_: batch[1],
                                           keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
-            sys.stdout.flush()
+
             #elif choice == 1:
-            #else:
-            #    if i < cutoff*epoch_iter:
-            #        train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
-            #                                                                   y_: batch[1],
-            #                                                                    keep_prob1:0.3,
-            #                                                                    keep_prob2:0.3,
-            #                                                                    keep_prob3:0.5})
+            else:
+                if i < cutoff*epoch_iter:
+                    train_steps[i % len(train_steps)].run(feed_dict={x: batch[0],
+                                                                               y_: batch[1],
+                                                                                keep_prob1:0.3,
+                                                                                keep_prob2:0.3,
+                                                                                keep_prob3:0.5})
 
                     #train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0],
                     #                                                            y_: batch[1],
@@ -221,50 +227,5 @@ for cutoff in cutoffs:
             #            print("Switching to output layer only.")
             #        train_steps[-1].run(feed_dict={x: batch[0], y_: batch[1],
             #                              keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
-                
-        np.save('backprop_cifar'+str(cutoff), accuracies)
-        '''
-        accuracies = []
-        for i in range(epoch_iter*20):
-            epoch_number = i // epoch_iter
-            
-            batch = images.next()
-
-            if i % epoch_iter == 0:
-                print("Starting Epoch %d of %d" % (i // epoch_iter, epochs))
-                #print("Starting Epoch %d of %d, Training Layer %d" % (i // epoch_iter, epochs, epoch_number // len(train_steps))
-
-            if i%100 == 0:
-                train_accuracy = accuracy.eval(feed_dict={x:batch[0], 
-                                                          y_: batch[1],
-                                                          keep_prob1: 1., 
-                                                          keep_prob2: 1.,
-                                                          keep_prob3: 1.})
-
-                acc1 = accuracy.eval(feed_dict={x: x_test[:1000], y_: y_test[:1000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000], y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000], y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000], y_: y_test[3000:4000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000], y_: y_test[4000:5000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000], y_: y_test[5000:6000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000], y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000], y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000], y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-                acc10 = accuracy.eval(feed_dict={x: x_test[9000:], y_: y_test[9000:], keep_prob1:1., keep_prob2:1., keep_prob3:1.})
-
-                acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
-
-                accuracies.append(acc)
-
-                print("step %d, training accuracy %g, testing accuracy %g"%(i, train_accuracy, acc))
-            #print([np.max(weight[0].eval()) for weight in train_vars])
-
-
-            
-            #if choice == 0:
-
-            train_step.run(feed_dict={x: batch[0], y_: batch[1],
-                                      keep_prob1:0.3, keep_prob2:0.3, keep_prob3:0.5})
-        np.save('o_accuracies_gibbs_pretrain_'+str(cutoff), accuracies)
-        '''
-
+            sys.stdout.flush()                
+        np.save('./results/decay_cifar_'+str(cutoff), accuracies)
