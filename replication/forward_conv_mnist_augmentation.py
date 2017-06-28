@@ -349,7 +349,7 @@ with tf.variable_scope("3output"):
     
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
-print(y_conv_drop.get_shape())
+print(y_conv.get_shape())
     
 learning_rate = tf.placeholder(tf.float32, shape=[])
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
