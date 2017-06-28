@@ -97,12 +97,14 @@ with tf.variable_scope("1layer1"):
     h_pool1 = max_pool_2x2(h_conv1)
 
     keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    print("YES")
     h_poo11_drop = tf.nn.dropout(h_pool1, keep_prob1)
-
+    print(h_pool1_drop.get_shape())
+    
 flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
 
 with tf.variable_scope("1fullyconnected"):
-    h_pool1_flat = tf.reshape(h_pool1_drop, [-1, flat_dim])
+    h_pool1_flat = tf.reshape(h_poo11_drop, [-1, flat_dim])
     h_fc1 = full_relu(h_pool1_flat, [flat_dim, 150])
 
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
