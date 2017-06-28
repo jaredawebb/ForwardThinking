@@ -39,7 +39,6 @@ def const_relu(input, constant):
     return tf.nn.relu(conv + biases)
 
 def max_pool_2x2(x):
-    print('hey. Sup.')
     return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                         strides=[1, 2, 2, 1], padding='SAME')
 
@@ -96,23 +95,24 @@ x_image = tf.reshape(x, [-1,28,28,1])
 with tf.variable_scope("1layer1"):
     h_conv1 = conv_relu(x_image, [3, 3, 1, 256], [256])
     h_pool1 = max_pool_2x2(h_conv1)
-    print(h_pool1)
-    
-    flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
-    print(flat_dim)
-    h_pool1_flat = tf.reshape(h_poo11, [-1, flat_dim])
+
+flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
 
 with tf.variable_scope("1fullyconnected"):
+    h_pool1_flat = tf.reshape(h_pool1, [-1, flat_dim])
+    
     keep_prob1 = tf.placeholder(tf.float32, shape=[])
-    h_poo11_drop = tf.nn.dropout(h_pool1_flat, keep_prob1)
+    h_pool1_drop = tf.nn.dropout(h_pool1_flat, keep_prob1)
     
     h_fc1 = full_relu(h_pool1_drop, [flat_dim, 150])
-
+    
+with tf.variable_scope("1output"):
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob2)
     
-with tf.variable_scope("1output"):
     y_conv = full_relu(h_fc1_drop, [150, 10])
+
+
 
 learning_rate = tf.placeholder(tf.float32, shape=[])
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
@@ -225,11 +225,11 @@ with tf.variable_scope("2fullyconnected"):
     h_pool2_drop = tf.nn.dropout(h_pool2_flat, keep_prob1)
     
     h_fc1 = full_relu(h_pool2_drop, [flat_dim, 150])
-
+    
+with tf.variable_scope("2output"):
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob2)
     
-with tf.variable_scope("2output"):
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
 learning_rate = tf.placeholder(tf.float32, shape=[])
@@ -342,11 +342,11 @@ with tf.variable_scope("3fullyconnected"):
     h_pool3_drop = tf.nn.dropout(h_pool3_flat, keep_prob1)
     
     h_fc1 = full_relu(h_pool3_drop, [flat_dim, 150])
-
+    
+with tf.variable_scope("3output"):
     keep_prob2 = tf.placeholder(tf.float32, shape=[])
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob2)
     
-with tf.variable_scope("3output"):
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
 print(y_conv_drop.get_shape())
