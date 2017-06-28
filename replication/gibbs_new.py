@@ -116,7 +116,7 @@ with tf.variable_scope("output"):
 
 
 
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
 
 layers = ['layer1', 'layer2', 'layer3', 'fullyconnected', 'output']
 train_vars = [tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, layer) for layer in layers]
@@ -130,7 +130,7 @@ train_steps = [optimizer.minimize(cross_entropy,
 train_step = optimizer.minimize(cross_entropy)
 train_step_new = optimizer.minimize(cross_entropy, var_list=train_vars[-3] + train_vars[-2] + train_vars[-1])
 
-correct_prediction = tf.equal(tf.argmax(y_conv_drop,1), tf.argmax(y_,1))
+correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 init_op = tf.global_variables_initializer()
 
