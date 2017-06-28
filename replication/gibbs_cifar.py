@@ -142,7 +142,7 @@ train_vars = [tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, layer) for lay
 global_step = tf.Variable(0, trainable=False)
 starter_learning_rate = 0.0001
 learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
-                                           6000, 0.98, staircase=True)
+                                           12000, 0.98, staircase=True)
 
 optimizer = tf.train.AdamOptimizer(learning_rate)
 
@@ -172,7 +172,7 @@ for cutoff in cutoffs:
             batch = images.next()
 
             if i % epoch_iter == 0:
-                print("Starting Epoch %d of %d" % (i // epoch_iter, epochs))
+                print("Starting Epoch %d of %d, learning rate %g" % (i // epoch_iter, epochs, learning_rate.eval()))
                 #print("Starting Epoch %d of %d, Training Layer %d" % (i // epoch_iter, epochs, epoch_number // len(train_steps))
 
             if i%100 == 0:
