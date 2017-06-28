@@ -96,23 +96,23 @@ with tf.variable_scope("1layer1"):
     h_conv1 = conv_relu(x_image, [3, 3, 1, 256], [256])
     h_pool1 = max_pool_2x2(h_conv1)
 
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_poo11_drop = tf.nn.dropout(h_pool1, keep_prob1)
+
 flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
 
 with tf.variable_scope("1fullyconnected"):
-    h_pool1_flat = tf.reshape(h_pool1, [-1, flat_dim])
+    h_pool1_flat = tf.reshape(h_pool1_drop, [-1, flat_dim])
     h_fc1 = full_relu(h_pool1_flat, [flat_dim, 150])
 
-    keep_prob1 = tf.placeholder(tf.float32, shape=[])
-    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob2)
     
 with tf.variable_scope("1output"):
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
-    keep_prob2 = tf.placeholder(tf.float32, shape=[])
-    y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
-
 learning_rate = tf.placeholder(tf.float32, shape=[])
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
 
 train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
@@ -212,24 +212,24 @@ with tf.variable_scope("2layer1"):
 with tf.variable_scope("2layer2"):
     h_conv2 = conv_relu(h_pool1, [3, 3, 256, 256], [256])
     h_pool2 = max_pool_2x2(h_conv2)
+    
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_pool2_drop = tf.nn.dropout(h_pool2, keep_prob1)
 
 flat_dim = int(h_pool2.get_shape()[1]*h_pool2.get_shape()[2]*h_pool2.get_shape()[3])
 
 with tf.variable_scope("2fullyconnected"):
-    h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
+    h_pool2_flat = tf.reshape(h_pool2_drop, [-1, flat_dim])
     h_fc1 = full_relu(h_pool2_flat, [flat_dim, 150])
 
-    keep_prob1 = tf.placeholder(tf.float32, shape=[])
-    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob2)
     
 with tf.variable_scope("2output"):
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
-    keep_prob2 = tf.placeholder(tf.float32, shape=[])
-    y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
-
 learning_rate = tf.placeholder(tf.float32, shape=[])
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
 train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -329,20 +329,21 @@ with tf.variable_scope("3layer3"):
     h_conv3 = conv_relu(h_pool2, [3, 3, 256, 128], [128])
     h_pool3 = max_pool_2x2(h_conv3)
 
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    h_pool3_drop = tf.nn.dropout(h_pool3, keep_prob1)
+    
+    
 flat_dim = int(h_pool3.get_shape()[1]*h_pool3.get_shape()[2]*h_pool3.get_shape()[3])
 
 with tf.variable_scope("3fullyconnected"):
-    h_pool3_flat = tf.reshape(h_pool3, [-1, flat_dim])
+    h_pool3_flat = tf.reshape(h_pool3_drop, [-1, flat_dim])
     h_fc1 = full_relu(h_pool3_flat, [flat_dim, 150])
 
-    keep_prob1 = tf.placeholder(tf.float32, shape=[])
-    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob2)
     
 with tf.variable_scope("3output"):
     y_conv = full_relu(h_fc1_drop, [150, 10])
-
-    keep_prob2 = tf.placeholder(tf.float32, shape=[])
-    y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
 
 print(y_conv_drop.get_shape())
     
