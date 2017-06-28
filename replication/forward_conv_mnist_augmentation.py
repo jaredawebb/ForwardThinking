@@ -100,7 +100,7 @@ with tf.variable_scope("1layer1"):
     h_pool1_flat = tf.reshape(h_poo11, [-1, flat_dim])
 
 with tf.variable_scope("1fullyconnected"):
-        keep_prob1 = tf.placeholder(tf.float32, shape=[])
+    keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_poo11_drop = tf.nn.dropout(h_pool1_flat, keep_prob1)
     
     h_fc1 = full_relu(h_pool1_drop, [flat_dim, 150])
