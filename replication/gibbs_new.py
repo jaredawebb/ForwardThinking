@@ -101,16 +101,20 @@ flat_dim = int(h_pool3.get_shape()[1]*h_pool3.get_shape()[2]*h_pool3.get_shape()
 
 with tf.variable_scope("fullyconnected"):
     h_pool3_flat = tf.reshape(h_pool3, [-1, flat_dim])
-    h_fc1 = full_relu(h_pool3_flat, [flat_dim, 150])
-
+    
     keep_prob1 = tf.placeholder(tf.float32, shape=[])
-    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob1)
+    h_pool3_drop = tf.nn.dropout(h_pool3_flat, keep_prob1)
+    
+    h_fc1 = full_relu(h_pool3_drop, [flat_dim, 150])
+
+    keep_prob2 = tf.placeholder(tf.float32, shape=[])
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob2)
+    
 
 with tf.variable_scope("output"):
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
-    keep_prob2 = tf.placeholder(tf.float32, shape=[])
-    y_conv_drop = tf.nn.dropout(y_conv, keep_prob2)
+
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv_drop, labels=y_))
 
