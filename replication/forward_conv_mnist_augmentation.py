@@ -99,6 +99,7 @@ with tf.variable_scope("1layer1"):
     print(h_pool1)
     
     flat_dim = int(h_pool1.get_shape()[1]*h_pool1.get_shape()[2]*h_pool1.get_shape()[3])
+    print(flat_dim)
     h_pool1_flat = tf.reshape(h_poo11, [-1, flat_dim])
 
 with tf.variable_scope("1fullyconnected"):
