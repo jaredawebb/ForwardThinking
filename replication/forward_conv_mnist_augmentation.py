@@ -219,7 +219,7 @@ with tf.variable_scope("2layer2"):
 flat_dim = int(h_pool2.get_shape()[1]*h_pool2.get_shape()[2]*h_pool2.get_shape()[3])
 
 with tf.variable_scope("2fullyconnected"):
-    h_pool2_flat = tf.reshape(h_pool2_drop, [-1, flat_dim])
+    h_pool2_flat = tf.reshape(h_pool2, [-1, flat_dim])
     
     keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_pool2_drop = tf.nn.dropout(h_pool2_flat, keep_prob1)
@@ -336,7 +336,7 @@ with tf.variable_scope("3layer3"):
 flat_dim = int(h_pool3.get_shape()[1]*h_pool3.get_shape()[2]*h_pool3.get_shape()[3])
 
 with tf.variable_scope("3fullyconnected"):
-    h_pool3_flat = tf.reshape(h_pool3_drop, [-1, flat_dim])
+    h_pool3_flat = tf.reshape(h_pool3, [-1, flat_dim])
     
     keep_prob1 = tf.placeholder(tf.float32, shape=[])
     h_pool3_drop = tf.nn.dropout(h_pool3_flat, keep_prob1)
