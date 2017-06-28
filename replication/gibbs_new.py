@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+import sys
 
 import keras
 from keras import backend as K
@@ -233,5 +234,5 @@ for cutoff in cutoffs:
             elif i == epoch_iter*80:
                 lr = learning_rates[5]
                 print("Learning Rate Updated to: " + str(lr))
-
-            np.save('accuracies_'+str(cutoff), accuracies)
+            sys.stdout.flush()
+        np.save('accuracies_'+str(cutoff), accuracies)
