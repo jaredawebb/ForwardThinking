@@ -142,7 +142,7 @@ train_vars = [tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, layer) for lay
 global_step = tf.Variable(0, trainable=False)
 starter_learning_rate = 0.01
 learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
-                                           10000, 0.96, staircase=True)
+                                           1000, 0.96, staircase=True)
 
 optimizer = tf.train.AdamOptimizer(learning_rate)
 
