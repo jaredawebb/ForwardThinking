@@ -140,7 +140,7 @@ layers = ['layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'fullyconn
 train_vars = [tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, layer) for layer in layers]
 
 global_step = tf.Variable(0, trainable=False)
-starter_learning_rate = 0.01
+starter_learning_rate = 0.001
 learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                            6000, 0.96, staircase=True)
 
