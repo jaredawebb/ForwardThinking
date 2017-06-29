@@ -122,22 +122,29 @@ cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_
 layers = ['layer1', 'layer2', 'layer3', 'fullyconnected', 'output']
 train_vars = [tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, layer) for layer in layers]
 
-learning_rate = tf.placeholder(tf.float32, shape=[])
+global_step = tf.Variable(0, trainable=False)
+starter_learning_rate = 0.0001
+learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
+                                           6000, 0.98, staircase=True)
+
 optimizer = tf.train.AdamOptimizer(learning_rate)
 
 train_steps = [optimizer.minimize(cross_entropy,
-                                  var_list=train_vars[i] + train_vars[-2] + train_vars[-1]) for i in range(len(layers)-2)]
+                                  var_list=train_vars[i] + train_vars[-2] + train_vars[-1],
+                                  global_step=global_step) for i in range(len(layers)-2)]
 
-train_step = optimizer.minimize(cross_entropy)
-train_step_new = optimizer.minimize(cross_entropy, var_list=train_vars[-3] + train_vars[-2] + train_vars[-1])
+train_step = optimizer.minimize(cross_entropy, global_step=global_step)
+train_step_new = optimizer.minimize(cross_entropy,
+                                    var_list=train_vars[-3] + train_vars[-2] + train_vars[-1],
+                                    global_step=global_step)
 
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 init_op = tf.global_variables_initializer()
 
 
-epochs = 100
-cutoffs = [64, 82, 100]
+epochs = 150
+cutoffs = [100, 150]
 learning_rates = [0.005, 0.002, 0.001, 0.0005, 0.0001, 0.00005]
 
 lr = learning_rates[0]
