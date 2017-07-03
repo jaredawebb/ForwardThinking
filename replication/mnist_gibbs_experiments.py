@@ -195,8 +195,8 @@ for arch in architectures:
                 test_acc = []
                 chunk_size=100
                 for i in range(0, len(x_test), chunk_size):
-                    feed_dict = {x: x_test[i:i+chunk_size].reshape((chunk_size, 784)),
-                                 y_: y_test[i:i+chunk_size],
+                    feed_dict = {x: x_test[j:j+chunk_size].reshape((chunk_size, 784)),
+                                 y_: y_test[j:j+chunk_size],
                                  keep_prob1:1.,
                                  keep_prob2:1.}
                     test_acc.append(accuracy.eval(feed_dict=feed_dict))
