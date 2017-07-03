@@ -192,7 +192,7 @@ for arch in architectures:
                 
 
             weights.append((train_vars[0].eval(), train_vars[1].eval()))
-            starter_learning_rate = learing_rate.eval()
+            starter_learning_rate = learning_rate.eval()
             
             
             
@@ -364,7 +364,7 @@ for arch in architectures:
                                                                             keep_prob2:0.5})
 
             weights.append((train_vars[0].eval(), train_vars[1].eval()))
-            starter_learning_rate = learing_rate.eval()
+            starter_learning_rate = learning_rate.eval()
             
             
         # Set up architecture
@@ -446,7 +446,7 @@ for arch in architectures:
                                                                             keep_prob2:0.5})
                 
             weights.append((train_vars[0].eval(), train_vars[1].eval()))
-            starter_learning_rate = learing_rate.eval()
+            starter_learning_rate = learning_rate.eval()
                 
         # Set up architecture
         with tf.variable_scope("3layer1"):
