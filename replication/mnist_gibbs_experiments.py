@@ -245,7 +245,7 @@ for arch in architectures:
         title_string = 'accuracies'
         for size in arch:
             title_string += '_' + str(size)
-        np.save('accuracies_'+str(cutoff), accuracies)
+        np.save('./mnist_exp_results/accuracies_'+str(cutoff), accuracies)
 
 
 
