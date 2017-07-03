@@ -182,7 +182,7 @@ for arch in architectures:
             batch = images.next()
 
             if i % epoch_iter == 0:
-                print("Starting Epoch %d of %d" % (i // epoch_iter, epochs))
+                print(str(arch) + " Starting Epoch %d of %d" % (i // epoch_iter, epochs))
                 #print("Starting Epoch %d of %d, Training Layer %d" % (i // epoch_iter, epochs, epoch_number & len(train_steps))
 
             if i%100 == 0:
