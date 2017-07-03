@@ -90,13 +90,13 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 x_image = tf.reshape(x, [-1,28,28,1])
 
-architectures = [[64, 64], [128, 64], [128, 128], [256, 128], [256, 256], [512, 256], [512, 512],
+architectures = [[128, 64], [128, 128], [256, 128], [256, 256], [512, 256], [512, 512],
                  [64, 64, 32], [128, 64, 64], [128, 128, 64], [256, 128, 128], [256, 256, 128],
                  [512, 256, 256], [512, 512, 256]]
 
 
 for arch in architectures:
-
+    tf.reset_default_graph()
     # Get start time
     t1 = time.time()
     
@@ -242,7 +242,7 @@ for arch in architectures:
                                                   keep_prob2:0.5})
     
                 
-        title_string = 'accuracies'
+        title_string = './mnist_exp_results/accuracies'
         for size in arch:
             title_string += '_' + str(size)
         np.save(title_string, accuracies)
