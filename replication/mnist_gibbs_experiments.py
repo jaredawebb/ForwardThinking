@@ -85,7 +85,7 @@ epochs = 100
 epoch_iter = len(x_train) // batch_size
 total_iter = epoch_iter*epochs
 
-architectures = [[128, 64], [128, 128], [256, 128], [256, 256], [512, 256], [512, 512],
+architectures = ['''[128, 64], [128, 128], [256, 128], [256, 256],'''[512, 256], [512, 512],
                  [64, 64, 32], [128, 64, 64], [128, 128, 64], [256, 128, 128], [256, 256, 128],
                  [512, 256, 256], [512, 512, 256]]
 
@@ -190,21 +190,17 @@ for arch in architectures:
                                                           y_: batch[1],
                                                           keep_prob1: 1., 
                                                           keep_prob2: 1.})
+                                
+                test_acc = []
+                chunk_size=100
+                for i in range(0, len(x_test), chunk_size):
+                    feed_dict = {x: x_test[i:i+chunk_size].reshape((chunk_size, 784)),
+                                 y_: y_test[i:i+chunk_size],
+                                 keep_prob1:1.,
+                                 keep_prob2:1.}
+                    test_acc.append(accuracy.eval(feed_dict=feed_dict))
 
-                
-                
-                acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1.})
-                acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1.})
-                acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000].reshape((1000, 784)), y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1.})
-                acc4 = accuracy.eval(feed_dict={x: x_test[3000:4000].reshape((1000, 784)), y_: y_test[3000:4000], keep_prob1:1., keep_prob2:1.})
-                acc5 = accuracy.eval(feed_dict={x: x_test[4000:5000].reshape((1000, 784)), y_: y_test[4000:5000], keep_prob1:1., keep_prob2:1.})
-                acc6 = accuracy.eval(feed_dict={x: x_test[5000:6000].reshape((1000, 784)), y_: y_test[5000:6000], keep_prob1:1., keep_prob2:1.})
-                acc7 = accuracy.eval(feed_dict={x: x_test[6000:7000].reshape((1000, 784)), y_: y_test[6000:7000], keep_prob1:1., keep_prob2:1.})
-                acc8 = accuracy.eval(feed_dict={x: x_test[7000:8000].reshape((1000, 784)), y_: y_test[7000:8000], keep_prob1:1., keep_prob2:1.})
-                acc9 = accuracy.eval(feed_dict={x: x_test[8000:9000].reshape((1000, 784)), y_: y_test[8000:9000], keep_prob1:1., keep_prob2:1.})
-                acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1.})
-
-                acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
+                acc = np.mean(test_acc)
                 
                 curr_time = time.time()
                 accuracies.append((acc, curr_time - t1))
