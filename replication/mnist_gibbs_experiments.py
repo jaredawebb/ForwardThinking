@@ -207,10 +207,8 @@ for arch in architectures:
                 
                 curr_time = time.time()
                 accuracies.append((acc, curr_time - t1))
-
-                print(i, train_accuracy, acc, learning_rate)
                 
-                print("step %d, training accuracy %g, testing accuracy %g, learning rate %g, time %g" %(i, train_accuracy, acc, learning_rate, curr_time - t1))
+                print("step %d, training accuracy %g, testing accuracy %g, learning rate %g, time %g" %(i, train_accuracy, acc, learning_rate.eval(), curr_time - t1))
                 
                 sys.stdout.flush()
                 
