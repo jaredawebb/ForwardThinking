@@ -156,6 +156,7 @@ for arch in architectures:
     starter_learning_rate = 0.005
     base = 0.98
     decay_step = decay_steps(base, total_iter)
+    print("Decay step: " + str(decay_step))
     learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                decay_step, base, staircase=False)
     
