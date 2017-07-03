@@ -156,6 +156,9 @@ for arch in architectures:
         
         with tf.Session() as sess:
             sess.run(init_op)
+            
+            batch = images.next()
+            
             for i in range(epoch_iter + 1):
                 
                 if i%100 == 0:
@@ -238,6 +241,8 @@ for arch in architectures:
         with tf.Session() as sess:
             sess.run(init_op)
             for i in range(epoch_iter*99):
+                
+                batch = images.next()
                 
                 if i % epoch_iter == 0:
                     print(str(arch) + " Starting Epoch %d of %d" % ((i // epoch_iter) + 1, 100))
@@ -327,6 +332,8 @@ for arch in architectures:
             sess.run(init_op)
             for i in range(epoch_iter + 1):
                 
+                batch = images.next()
+                
                 if i%100 == 0:
                     train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                               y_: batch[1],
@@ -406,6 +413,8 @@ for arch in architectures:
         with tf.Session() as sess:
             sess.run(init_op)
             for i in range(epoch_iter + 1):
+                
+                batch = images.next()
                 
                 if i%100 == 0:
                     train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
@@ -489,6 +498,8 @@ for arch in architectures:
             sess.run(init_op)
             for i in range(epoch_iter + 1):
                 
+                batch = images.next()
+
                 if i % epoch_iter == 0:
                     print(str(arch) + " Starting Epoch %d of %d" % ((i // epoch_iter) + 2, 100))
                 
