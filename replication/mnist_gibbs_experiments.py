@@ -8,8 +8,8 @@ from keras import backend as K
 from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
 
-def decay_steps(base, total_iter, order=2):
-    return total_iter*np.log10(base)/order
+def decay_steps(base, total_iter, start_rate, final_rate):
+    return int(total_iter*np.log10(base)/(np.log10(final_rate) - np.log10(start_rate)))
 
 def conv_relu(input, kernel_shape, bias_shape):
     # Create variable named "weights".
@@ -155,7 +155,7 @@ for arch in architectures:
     global_step = tf.Variable(0, trainable=False)
     starter_learning_rate = 0.005
     base = 0.98
-    decay_step = decay_steps(base, total_iter)
+    decay_step = decay_steps(base, total_iter, starter_learing_rate, starter_learning_rate/100)
     print("Decay step: " + str(decay_step))
     learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                decay_step, base, staircase=False)
