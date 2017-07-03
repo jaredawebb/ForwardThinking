@@ -191,7 +191,7 @@ for arch in architectures:
                                                           keep_prob2: 1.})
 
                 
-                '''
+                
                 acc1 = accuracy.eval(feed_dict={x: x_test[:1000].reshape((1000, 784)), y_: y_test[:1000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
                 acc2 = accuracy.eval(feed_dict={x: x_test[1000:2000].reshape((1000, 784)), y_: y_test[1000:2000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
                 acc3 = accuracy.eval(feed_dict={x: x_test[2000:3000].reshape((1000, 784)), y_: y_test[2000:3000], keep_prob1:1., keep_prob2:1., learning_rate: lr})
@@ -204,8 +204,7 @@ for arch in architectures:
                 acc10 = accuracy.eval(feed_dict={x: x_test[9000:].reshape((1000, 784)), y_: y_test[9000:], keep_prob1:1., keep_prob2:1., learning_rate: lr})
 
                 acc = np.mean([acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10])
-                '''
-                acc = accuracy.eval(feed_dict={x: x_test.reshape(10000, 784), y_:y_test, keep_prob1:1., keep_prob2:2})
+                
                 curr_time = time.time()
                 accuracies.append((acc, curr_time - t1))
 
