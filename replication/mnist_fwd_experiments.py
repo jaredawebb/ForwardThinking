@@ -96,8 +96,8 @@ epoch_iter = len(x_train) // batch_size
 total_iter = epoch_iter*epochs
 
 #architectures = [[64, 64], [128, 64], [128, 128], [256, 128], [256, 256],
-architectures = [[512, 256], [512, 512],
-                 [64, 64, 32], [128, 64, 64], [128, 128, 64], [256, 128, 128], [256, 256, 128],
+#architectures = [[512, 256], [512, 512],
+architectures = [[64, 64, 32], [128, 64, 64], [128, 128, 64], [256, 128, 128], [256, 256, 128],
                  [512, 256, 256], [512, 512, 256]]
 
 
@@ -283,6 +283,11 @@ for arch in architectures:
     if len(arch) == 3:
         # Get start time
         t1 = time.time()
+
+        x = tf.placeholder(tf.float32, shape=[None, 784])
+        y_ = tf.placeholder(tf.float32, shape=[None, 10])
+
+        x_image = tf.reshape(x, [-1,28,28,1])
 
         # Set up architecture
         with tf.variable_scope("1layer1"):
