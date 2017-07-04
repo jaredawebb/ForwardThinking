@@ -155,7 +155,7 @@ for arch in architectures:
 
     # Set up rate decay
     global_step = tf.Variable(0, trainable=False)
-    starter_learning_rate = 0.0001
+    starter_learning_rate = 0.0005
     base = 0.98
     decay_step = decay_steps(base, total_iter, starter_learning_rate, starter_learning_rate/100)
     print("Decay step: " + str(decay_step))
