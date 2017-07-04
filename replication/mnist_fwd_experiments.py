@@ -494,7 +494,7 @@ for arch in architectures:
         
         with tf.Session() as sess:
             sess.run(init_op)
-            for i in range(epoch_iter + 1):
+            for i in range(epoch_iter*98):
                 
                 batch = images.next()
 
