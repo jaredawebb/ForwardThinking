@@ -236,9 +236,13 @@ for arch in architectures:
                                                   y_: batch[1],
                                                   keep_prob1:0.3,
                                                   keep_prob2:0.5})
-    
+            elif technique == 3:
+                train_steps[epoch_number % len(train_steps)].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+                                                                                y_: batch[1],
+                                                                                keep_prob1:0.3,
+                                                                                keep_prob2:0.5})
                 
-        title_string = './mnist_exp_results/gibbs_accuracies'
+        title_string = './mnist_exp_results/epoch_gibbs_accuracies'
         for size in arch:
             title_string += '_' + str(size)
         np.save(title_string, accuracies)
