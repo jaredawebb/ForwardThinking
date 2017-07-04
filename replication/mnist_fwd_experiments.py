@@ -530,7 +530,7 @@ for arch in architectures:
                                                                             keep_prob2:0.5})
             
             
-        title_string = './mnist_exp_results/fwd_accuracies'
+        title_string = './mnist_exp_results/small_lr_fwd_accuracies'
         for size in arch:
             title_string += '_' + str(size)
         np.save(title_string, accuracies)
