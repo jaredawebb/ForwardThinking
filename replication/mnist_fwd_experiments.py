@@ -452,7 +452,7 @@ for arch in architectures:
             h_pool1 = max_pool_2x2(h_conv1)
             
         with tf.variable_scope("3layer2"):
-            h_conv1 = const_relu(x_image, weights[1])
+            h_conv2 = const_relu(x_image, weights[1])
             h_pool2 = max_pool_2x2(h_conv2)
             
         with tf.variable_scope("3layer3"):
