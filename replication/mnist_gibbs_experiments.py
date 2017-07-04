@@ -44,7 +44,7 @@ def max_pool_2x2(x):
   return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                         strides=[1, 2, 2, 1], padding='SAME')
 
-technique = 1
+technique = 0
 
 batch_size = 128
 num_classes = 10
@@ -239,7 +239,7 @@ for arch in architectures:
                                                   keep_prob2:0.5})
     
                 
-        title_string = './mnist_exp_results/accuracies'
+        title_string = './mnist_exp_results/gibbs_accuracies'
         for size in arch:
             title_string += '_' + str(size)
         np.save(title_string, accuracies)
