@@ -138,9 +138,9 @@ for arch in architectures:
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
         
         global_step = tf.Variable(0, trainable=False)
-        starter_learning_rate = 0.005
+        starter_learning_rate = 0.0005
         base = 0.98
-        decay_step = decay_steps(base, total_iter, starter_learning_rate, starter_learning_rate/100)
+        decay_step = decay_steps(base, total_iter, starter_learning_rate, 0.0005/100)
         print("Decay step: " + str(decay_step))
         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                    decay_step, base, staircase=False)
@@ -223,7 +223,7 @@ for arch in architectures:
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
         
         global_step = tf.Variable(0, trainable=False)
-        decay_step = decay_steps(base, total_iter - epoch_iter, starter_learning_rate, 0.005/100)
+        decay_step = decay_steps(base, total_iter - epoch_iter, starter_learning_rate, 0.0005/100)
         print("Decay step: " + str(decay_step))
         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                    decay_step, base, staircase=False)
@@ -315,7 +315,7 @@ for arch in architectures:
         global_step = tf.Variable(0, trainable=False)
         starter_learning_rate = 0.0005
         base = 0.98
-        decay_step = decay_steps(base, total_iter, starter_learning_rate, starter_learning_rate/100)
+        decay_step = decay_steps(base, total_iter, starter_learning_rate, 0.0005/100)
         print("Decay step: " + str(decay_step))
         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                    decay_step, base, staircase=False)
@@ -395,7 +395,7 @@ for arch in architectures:
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
         
         global_step = tf.Variable(0, trainable=False)
-        decay_step = decay_steps(base, total_iter - epoch_iter, starter_learning_rate, 0.005/100)
+        decay_step = decay_steps(base, total_iter - epoch_iter, starter_learning_rate, 0.0005/100)
         print("Decay step: " + str(decay_step))
         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                    decay_step, base, staircase=False)
@@ -478,7 +478,7 @@ for arch in architectures:
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
         
         global_step = tf.Variable(0, trainable=False)
-        decay_step = decay_steps(base, total_iter - epoch_iter*2, starter_learning_rate, 0.005/100)
+        decay_step = decay_steps(base, total_iter - epoch_iter*2, starter_learning_rate, 0.0005/100)
         print("Decay step: " + str(decay_step))
         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                    decay_step, base, staircase=False)
