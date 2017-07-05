@@ -197,6 +197,12 @@ for arch in architectures:
             
         # Set up architecture
         tf.reset_default_graph()
+
+        x = tf.placeholder(tf.float32, shape=[None, 784])
+        y_ = tf.placeholder(tf.float32, shape=[None, 10])
+
+        x_image = tf.reshape(x, [-1,28,28,1])
+
         with tf.variable_scope("2layer1"):
             h_conv1 = const_relu(x_image, weights[0])
             h_pool1 = max_pool_2x2(h_conv1)
@@ -371,6 +377,12 @@ for arch in architectures:
             
         # Set up architecture
         tf.reset_default_graph()
+        
+        x = tf.placeholder(tf.float32, shape=[None, 784])
+        y_ = tf.placeholder(tf.float32, shape=[None, 10])
+
+        x_image = tf.reshape(x, [-1,28,28,1])        
+        
         with tf.variable_scope("2layer1"):
             h_conv1 = const_relu(x_image, weights[0])
             h_pool1 = max_pool_2x2(h_conv1)
@@ -451,7 +463,13 @@ for arch in architectures:
             starter_learning_rate = learning_rate.eval()
                 
         # Set up architecture
-        tf.reset_default_graph()        
+        tf.reset_default_graph()      
+        
+        x = tf.placeholder(tf.float32, shape=[None, 784])
+        y_ = tf.placeholder(tf.float32, shape=[None, 10])
+
+        x_image = tf.reshape(x, [-1,28,28,1])
+        
         with tf.variable_scope("3layer1"):
             h_conv1 = const_relu(x_image, weights[0])
             h_pool1 = max_pool_2x2(h_conv1)
