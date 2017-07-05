@@ -153,7 +153,7 @@ for arch in architectures:
         correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
         init_op = tf.global_variables_initializer()
-        print(tf.trainable_variables())
+        print("HERE" + str(tf.trainable_variables()))
         
         with tf.Session() as sess:
             sess.run(init_op)
