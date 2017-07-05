@@ -8,6 +8,9 @@ from keras import backend as K
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 
+def decay_steps(base, total_iter, start_rate, final_rate):
+    return int(total_iter*np.log10(base)/(np.log10(final_rate) - np.log10(start_rate)))
+
 def conv_relu(input, kernel_shape, bias_shape):
     # Create variable named "weights".
     weights = tf.get_variable("weights", kernel_shape)
