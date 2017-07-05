@@ -30,9 +30,11 @@ def full_relu(input, shape):
 
 def const_relu(input, constant):
     weights = tf.get_variable("weights", constant[0].shape,
-                              initializer=tf.constant_initializer(constant[0]))
+                              initializer=tf.constant_initializer(constant[0]),
+                              trainable=False)
     biases = tf.get_variable("biases", constant[1].shape,
-                              initializer=tf.constant_initializer(constant[1]))
+                              initializer=tf.constant_initializer(constant[1]),
+                              trainable=False)
                              
     conv = tf.nn.conv2d(input, weights,
         strides=[1, 1, 1, 1], padding='SAME')
