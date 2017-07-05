@@ -86,6 +86,9 @@ images = datagen.flow(x_train, y_train, batch_size=batch_size)
 epochs = 200
 epoch_iter = len(x_train) // batch_size
 total_iter = epoch_iter*epochs
+starter_learning_rate = 0.0005
+final_learning_rate = starter_learning_rate/100
+technique = 0
 
 #architectures = [[64, 64], [128, 64], [128, 128], [256, 128], [256, 256], [512, 256], [512, 512],
 #                 [64, 64, 64, 64], [128, 128, 64, 64], [128, 128, 128, 128], [256, 256, 128, 128], [256, 256, 256, 256],
@@ -221,9 +224,9 @@ for arch in architectures:
 
     # Set up rate decay
     global_step = tf.Variable(0, trainable=False)
-    starter_learning_rate = 0.0005
+
     base = 0.98
-    decay_step = decay_steps(base, total_iter, starter_learning_rate, starter_learning_rate/100)
+    decay_step = decay_steps(base, total_iter, starter_learning_rate, final_learning_rate)
     print("Decay step: " + str(decay_step))
     learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                decay_step, base, staircase=False)
