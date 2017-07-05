@@ -256,6 +256,7 @@ for arch in architectures:
                     print(str(arch) + " Starting Epoch %d of %d" % ((i // epoch_iter) + 1, 100))
                 
                 if i%100 == 0:
+                    print(tf.trainable_variables()[0])
                     print(np.mean(tf.trainable_variables()[0].eval()))
                     train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                               y_: batch[1],
