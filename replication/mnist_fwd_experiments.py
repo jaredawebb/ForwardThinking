@@ -96,6 +96,8 @@ images = datagen.flow(x_train, y_train, batch_size=batch_size)
 epochs = 100
 epoch_iter = len(x_train) // batch_size
 total_iter = epoch_iter*epochs
+starter_learning_rate = 0.005
+final_learning_rate = starter_learning_rate/100
 
 architectures = [[64, 64], [128, 64], [128, 128], [256, 128], [256, 256], [512, 256], [512, 512],
                  [64, 64, 32], [128, 64, 64],[128, 128, 64], [256, 128, 128], [256, 256, 128],
@@ -140,9 +142,8 @@ for arch in architectures:
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
         
         global_step = tf.Variable(0, trainable=False)
-        starter_learning_rate = 0.0005
         base = 0.98
-        decay_step = decay_steps(base, total_iter, starter_learning_rate, 0.0005/100)
+        decay_step = decay_steps(base, total_iter, starter_learning_rate, final_learning_rate)
         print("Decay step: " + str(decay_step))
         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                    decay_step, base, staircase=False)
@@ -233,7 +234,7 @@ for arch in architectures:
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
         
         global_step = tf.Variable(0, trainable=False)
-        decay_step = decay_steps(base, total_iter - epoch_iter, starter_learning_rate, 0.0005/100)
+        decay_step = decay_steps(base, total_iter - epoch_iter, starter_learning_rate, final_learning_rate)
         print("Decay step: " + str(decay_step))
         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                    decay_step, base, staircase=False)
@@ -245,7 +246,6 @@ for arch in architectures:
         correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
         init_op = tf.global_variables_initializer()
-        print(tf.trainable_variables())
         
         with tf.Session() as sess:
             sess.run(init_op)
@@ -257,8 +257,7 @@ for arch in architectures:
                     print(str(arch) + " Starting Epoch %d of %d" % ((i // epoch_iter) + 1, 100))
                 
                 if i%100 == 0:
-                    print(tf.trainable_variables()[0])
-                    print(np.mean(tf.trainable_variables()[0].eval()))
+
                     train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                               y_: batch[1],
                                                               keep_prob1: 1., 
@@ -326,9 +325,8 @@ for arch in architectures:
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
         
         global_step = tf.Variable(0, trainable=False)
-        starter_learning_rate = 0.0005
         base = 0.98
-        decay_step = decay_steps(base, total_iter, starter_learning_rate, 0.0005/100)
+        decay_step = decay_steps(base, total_iter, starter_learning_rate, final_learning_rate)
         print("Decay step: " + str(decay_step))
         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                    decay_step, base, staircase=False)
@@ -341,7 +339,7 @@ for arch in architectures:
         correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
         init_op = tf.global_variables_initializer()
-        print(tf.trainable_variables())        
+     
         with tf.Session() as sess:
             sess.run(init_op)
             for i in range(epoch_iter + 1):
@@ -415,7 +413,7 @@ for arch in architectures:
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
         
         global_step = tf.Variable(0, trainable=False)
-        decay_step = decay_steps(base, total_iter - epoch_iter, starter_learning_rate, 0.0005/100)
+        decay_step = decay_steps(base, total_iter - epoch_iter, starter_learning_rate, final_learning_rate)
         print("Decay step: " + str(decay_step))
         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                    decay_step, base, staircase=False)
@@ -428,7 +426,6 @@ for arch in architectures:
         correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
         init_op = tf.global_variables_initializer()
-        print(tf.trainable_variables())
         
         with tf.Session() as sess:
             sess.run(init_op)
@@ -506,7 +503,7 @@ for arch in architectures:
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
         
         global_step = tf.Variable(0, trainable=False)
-        decay_step = decay_steps(base, total_iter - epoch_iter*2, starter_learning_rate, 0.0005/100)
+        decay_step = decay_steps(base, total_iter - epoch_iter*2, starter_learning_rate, final_learning_rate)
         print("Decay step: " + str(decay_step))
         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                    decay_step, base, staircase=False)
@@ -518,7 +515,6 @@ for arch in architectures:
         correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
         init_op = tf.global_variables_initializer()
-        print(tf.trainable_variables())
         
         with tf.Session() as sess:
             sess.run(init_op)

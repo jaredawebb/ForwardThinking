@@ -369,8 +369,7 @@ with tf.Session() as sess:
     for i in range(epoch_iter*epoch_sequence[2]):
         batch = images.next()
         if i%100 == 0 and i > 0:
-            print(tf.trainable_variables()[0])
-            print(np.mean(tf.trainable_variables()[0].eval()))            
+
             train_accuracy = accuracy.eval(feed_dict={x:batch[0].reshape((len(batch[0]), 784)), 
                                                       y_: batch[1],
                                                       learning_rate: lr,
