@@ -98,6 +98,9 @@ for arch in architectures:
     tf.reset_default_graph()
     t1 = time.time()
     
+    x = tf.placeholder(tf.float32, shape=[None, 32, 32, 3])
+    y_ = tf.placeholder(tf.float32, shape=[None, 10])
+    
     #######Layer 1
     with tf.variable_scope("layer1"):
         h_conv1 = conv_relu(x, [3, 3, 3, 128], [128])
