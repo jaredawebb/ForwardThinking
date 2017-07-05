@@ -196,6 +196,7 @@ for arch in architectures:
             
             
         # Set up architecture
+        tf.reset_default_graph()
         with tf.variable_scope("2layer1"):
             h_conv1 = const_relu(x_image, weights[0])
             h_pool1 = max_pool_2x2(h_conv1)
@@ -369,6 +370,7 @@ for arch in architectures:
             
             
         # Set up architecture
+        tf.reset_default_graph()
         with tf.variable_scope("2layer1"):
             h_conv1 = const_relu(x_image, weights[0])
             h_pool1 = max_pool_2x2(h_conv1)
@@ -449,6 +451,7 @@ for arch in architectures:
             starter_learning_rate = learning_rate.eval()
                 
         # Set up architecture
+        tf.reset_default_graph()        
         with tf.variable_scope("3layer1"):
             h_conv1 = const_relu(x_image, weights[0])
             h_pool1 = max_pool_2x2(h_conv1)
