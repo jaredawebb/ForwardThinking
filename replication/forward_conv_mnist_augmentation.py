@@ -200,7 +200,7 @@ with tf.Session() as sess:
     np.save('accuracies_layer1_aug', train_accuracies)
     print(len(forward_accuracies)) 
 ################ Train the second layer  ######################
-
+tf.reset_default_graph()
 train_accuracies = []                                    
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
@@ -314,7 +314,7 @@ with tf.Session() as sess:
     np.save('accuracies_layer2_aug', train_accuracies)
     print(len(forward_accuracies))
 ################ Train the third layer  ######################
-
+tf.reset_default_graph()
 train_accuracies = []
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
