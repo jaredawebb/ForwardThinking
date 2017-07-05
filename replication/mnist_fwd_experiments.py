@@ -24,9 +24,11 @@ def conv_relu(input, kernel_shape, bias_shape):
 
 def const_relu(input, constant):
     weights = tf.get_variable("weights", constant[0].shape,
-                              initializer=tf.constant_initializer(constant[0]))
+                              initializer=tf.constant_initializer(constant[0]),
+                              trainable=False)
     biases = tf.get_variable("biases", constant[1].shape,
-                              initializer=tf.constant_initializer(constant[1]))
+                              initializer=tf.constant_initializer(constant[1]),
+                              trainable=False)
                              
     conv = tf.nn.conv2d(input, weights,
         strides=[1, 1, 1, 1], padding='SAME')
@@ -153,7 +155,6 @@ for arch in architectures:
         correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
         init_op = tf.global_variables_initializer()
-        print("HERE" + str(tf.trainable_variables()))
         
         with tf.Session() as sess:
             sess.run(init_op)
