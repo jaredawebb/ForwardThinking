@@ -314,7 +314,7 @@ for arch in architectures:
             elif technique == 3:
                 train_steps[epoch_number % len(train_steps)].run(feed_dict=feed_dict)
                 
-        title_string = './cifar_exp_results/small_lr_backprop_accuracies'
+        title_string = './cifar_exp_results/backprop_accuracies'
         for size in arch:
             title_string += '_' + str(size)
         np.save(title_string, accuracies)
