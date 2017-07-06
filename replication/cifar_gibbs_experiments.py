@@ -86,7 +86,7 @@ images = datagen.flow(x_train, y_train, batch_size=batch_size)
 epochs = 200
 epoch_iter = len(x_train) // batch_size
 total_iter = epoch_iter*epochs
-starter_learning_rate = 0.0005
+starter_learning_rate = 0.0001
 final_learning_rate = starter_learning_rate/100
 technique = 0
 
