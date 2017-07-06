@@ -96,7 +96,7 @@ images = datagen.flow(x_train, y_train, batch_size=batch_size)
 epochs = 100
 epoch_iter = len(x_train) // batch_size
 total_iter = epoch_iter*epochs
-starter_learning_rate = 0.005
+starter_learning_rate = 0.0005
 final_learning_rate = starter_learning_rate/100
 
 architectures = [[64, 64], [128, 64], [128, 128], [256, 128], [256, 256], [512, 256], [512, 512],
@@ -285,7 +285,7 @@ for arch in architectures:
                                                                             keep_prob2:0.5})
             
             
-        title_string = './mnist_exp_results/fwd_accuracies'
+        title_string = './mnist_exp_results/small_lr_fwd_accuracies'
         for size in arch:
             title_string += '_' + str(size)
         np.save(title_string, accuracies)
