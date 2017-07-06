@@ -88,7 +88,7 @@ epoch_iter = len(x_train) // batch_size
 total_iter = epoch_iter*epochs
 starter_learning_rate = 0.0001
 final_learning_rate = starter_learning_rate/100
-technique = 1
+technique = 0
 
 #architectures = [[64, 64], [128, 64], [128, 128], [256, 128], [256, 256], [512, 256], [512, 512],
 #                 [64, 64, 64, 64], [128, 128, 64, 64], [128, 128, 128, 128], [256, 256, 128, 128], [256, 256, 256, 256],
