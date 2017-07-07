@@ -260,7 +260,7 @@ for arch in architectures:
         strings = ['gibbs_accuracies', 'backprop_accuracies', 'easy_fwd_accuracies', 'epoch_gibbs_accuracies',
                    'backprop_output']
         
-        title_string = './mnist_exp_results/small_lr_' + strings[technqiue]
+        title_string = './mnist_exp_results/small_lr_' + strings[technique]
         for size in arch:
             title_string += '_' + str(size)
         np.save(title_string, accuracies)
