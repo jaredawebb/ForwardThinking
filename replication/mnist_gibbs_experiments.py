@@ -44,7 +44,7 @@ def max_pool_2x2(x):
   return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                         strides=[1, 2, 2, 1], padding='SAME')
 
-technique = 1
+technique = 4
 
 batch_size = 128
 num_classes = 10
@@ -85,11 +85,11 @@ epochs = 100
 epoch_iter = len(x_train) // batch_size
 total_iter = epoch_iter*epochs
 
-architectures = [[64, 64], [128, 64], [128, 128], [256, 128], [256, 256],[512, 256], [512, 512],
-                 [64, 64, 32], [128, 64, 64], [128, 128, 64], [256, 128, 128], [256, 256, 128],
-                 [512, 256, 256], [512, 512, 256]]
+#architectures = [[64, 64], [128, 64], [128, 128], [256, 128], [256, 256],[512, 256], [512, 512],
+#                 [64, 64, 32], [128, 64, 64], [128, 128, 64], [256, 128, 128], [256, 256, 128],
+#                 [512, 256, 256], [512, 512, 256]]
 
-#architectures = [[512, 256, 256]]
+architectures = [[256, 256, 128], [512, 256, 256], [512, 512, 256]]
 
 
 for arch in architectures:
@@ -244,7 +244,23 @@ for arch in architectures:
                                                                                 keep_prob1:0.3,
                                                                                 keep_prob2:0.5})
                 
-        title_string = './mnist_exp_results/small_lr_backprop_accuracies'
+            elif technique == 4:
+                if epoch_number < 2:
+                    global_train_step.run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+                                                                                y_: batch[1],
+                                                                                keep_prob1:0.3,
+                                                                                keep_prob2:0.5})
+                else:
+                    train_steps[-1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+                                                  y_: batch[1],
+                                                  keep_prob1:0.3,
+                                                  keep_prob2:0.5})
+                
+        
+        strings = ['gibbs_accuracies', 'backprop_accuracies', 'easy_fwd_accuracies', 'epoch_gibbs_accuracies',
+                   'backprop_output']
+        
+        title_string = './mnist_exp_results/small_lr_' += strings[technqiue]
         for size in arch:
             title_string += '_' + str(size)
         np.save(title_string, accuracies)
