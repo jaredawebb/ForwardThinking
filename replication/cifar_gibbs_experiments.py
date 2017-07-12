@@ -243,8 +243,8 @@ for arch in architectures:
     #                                  global_step=global_step) for i in range(len(layers)-2)]
     
     train_steps = [optimizer.minimize(cross_entropy,
-                                      var_list=train_vars[i],
-                                      global_step=global_step) for i in range(len(layers))]
+                                      var_list=train_vars[i] + train_vars[-1],
+                                      global_step=global_step) for i in range(len(layers)-1)]
     
     global_train_step = optimizer.minimize(cross_entropy, global_step=global_step)    
     
@@ -329,7 +329,7 @@ for arch in architectures:
                 else:
                     train_steps[i % len(train_steps)].run(feed_dict=feed_dict)                    
                 
-        title_string = './cifar_exp_results/gibbs_accuracies'
+        title_string = './cifar_exp_results/' + techniques[technique] + '_accuracies'
         for size in arch:
             title_string += '_' + str(size)
         np.save(title_string, accuracies)
