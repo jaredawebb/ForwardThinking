@@ -90,6 +90,8 @@ starter_learning_rate = 0.0001
 final_learning_rate = starter_learning_rate/100
 # 0 gibbs, 1 backprop
 technique = sys.argv[1]
+techniques = ['Gibbs', 'Backprop', 'Easy Fwd', 'Epoch Gibbs', 'Backprop Primed Gibbs']
+print('Using Technique: ' + techniques[technique])
 
 #architectures = [[64, 64], [128, 64], [128, 128], [256, 128], [256, 256], [512, 256], [512, 512],
 #                 [64, 64, 64, 64], [128, 128, 64, 64], [128, 128, 128, 128], [256, 256, 128, 128], [256, 256, 256, 256],
