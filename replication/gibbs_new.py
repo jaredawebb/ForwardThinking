@@ -119,8 +119,6 @@ with tf.variable_scope("fullyconnected"):
 with tf.variable_scope("output"):
     y_conv = full_relu(h_fc1_drop, [150, 10])
 
-
-
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv, labels=y_))
 
 layers = ['layer1', 'layer2', 'layer3', 'fullyconnected', 'output']
