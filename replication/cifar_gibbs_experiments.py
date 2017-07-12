@@ -89,7 +89,7 @@ total_iter = epoch_iter*epochs
 starter_learning_rate = 0.0001
 final_learning_rate = starter_learning_rate/100
 # 0 gibbs, 1 backprop
-technique = sys.argv[1]
+technique = int(sys.argv[1])
 techniques = ['Gibbs', 'Backprop', 'Easy Fwd', 'Epoch Gibbs', 'Backprop Primed Gibbs']
 print('Using Technique: ' + techniques[technique])
 
