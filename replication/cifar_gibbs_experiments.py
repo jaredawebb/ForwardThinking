@@ -238,13 +238,13 @@ for arch in architectures:
     
     optimizer = tf.train.AdamOptimizer(learning_rate)
 
-    #train_steps = [optimizer.minimize(cross_entropy,
-    #                                  var_list=train_vars[i] + train_vars[-2] + train_vars[-1],
-    #                                  global_step=global_step) for i in range(len(layers)-2)]
-    
     train_steps = [optimizer.minimize(cross_entropy,
-                                      var_list=train_vars[i] + train_vars[-1],
-                                      global_step=global_step) for i in range(len(layers)-1)]
+                                      var_list=train_vars[i] + train_vars[-2] + train_vars[-1],
+                                      global_step=global_step) for i in range(len(layers)-2)]
+    
+    #train_steps = [optimizer.minimize(cross_entropy,
+    #                                  var_list=train_vars[i] + train_vars[-1],
+    #                                  global_step=global_step) for i in range(len(layers)-1)]
     
     global_train_step = optimizer.minimize(cross_entropy, global_step=global_step)    
     
