@@ -233,6 +233,7 @@ for arch in architectures:
 
     base = 0.98
     decay_step = decay_steps(base, total_iter, starter_learning_rate, final_learning_rate)
+    decay_step = 12000
     print("Decay step: " + str(decay_step))
     learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                                decay_step, base, staircase=True)
@@ -330,7 +331,7 @@ for arch in architectures:
                 else:
                     train_steps[i % len(train_steps)].run(feed_dict=feed_dict)                    
                 
-        title_string = './cifar_exp_results/' + techniques[technique] + '_accuracies'
+        title_string = './cifar_exp_results/slow_decay_' + techniques[technique] + '_accuracies'
         for size in arch:
             title_string += '_' + str(size)
         np.save(title_string, accuracies)
