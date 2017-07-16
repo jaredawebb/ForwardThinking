@@ -1,8 +1,7 @@
-# Tanner best: 256, 256, 5,5 mid
-
-import tensorflow as tf
+import tensorflow as tf  # Tanner best: 256, 256, 5,5 mid
 import numpy as np
 import sys
+import time
 
 import keras
 from keras import backend as K

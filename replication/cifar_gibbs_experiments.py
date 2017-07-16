@@ -44,6 +44,7 @@ def max_pool_2x2(x):
   return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                         strides=[1, 2, 2, 1], padding='SAME')
 
+
 batch_size = 32
 num_classes = 10
 img_rows, img_cols = 32, 32
@@ -114,11 +115,11 @@ for arch in architectures:
     
     #######Layer 1
     with tf.variable_scope("layer1"):
-        h_conv1 = conv_relu(x, [3, 3, 3, 128], [128])
+        h_conv1 = conv_relu(x, [3, 3, 3, arch[0]], [arch[0]])
 
     #######Layer 2
     with tf.variable_scope("layer2"):
-        h_conv2 = conv_relu(h_conv1, [3, 3, 128, 128], [128])
+        h_conv2 = conv_relu(h_conv1, [3, 3, arch[0], arch[1]], [arch[1]])
         h_pool2 = max_pool_2x2(h_conv2)
 
     if len(arch) == 2:
@@ -149,11 +150,11 @@ for arch in architectures:
             keep_prob1 = tf.placeholder(tf.float32, shape=[])
             h_drop2 = tf.nn.dropout(h_pool2, keep_prob1)
             
-            h_conv3 = conv_relu(h_drop2, [3, 3, 128, 128], [128])
+            h_conv3 = conv_relu(h_drop2, [3, 3, arch[1], arch[2]], [arch[2]])
 
         #######Layer 4
         with tf.variable_scope("layer4"):
-            h_conv4 = conv_relu(h_conv3, [3, 3, 128, 128], [128])
+            h_conv4 = conv_relu(h_conv3, [3, 3, arch[2], arch[3]], [arch[3]])
             h_pool4 = max_pool_2x2(h_conv4)
 
         flat_dim = int(h_pool4.get_shape()[1]*h_pool4.get_shape()[2]*h_pool4.get_shape()[3])
@@ -184,11 +185,11 @@ for arch in architectures:
             keep_prob1 = tf.placeholder(tf.float32, shape=[])
             h_drop2 = tf.nn.dropout(h_pool2, keep_prob1)
             
-            h_conv3 = conv_relu(h_drop2, [3, 3, 128, 128], [128])
+            h_conv3 = conv_relu(h_drop2, [3, 3, arch[1], arch[2]], [arch[2]])
 
         #######Layer 4
         with tf.variable_scope("layer4"):
-            h_conv4 = conv_relu(h_conv3, [3, 3, 128, 128], [128])
+            h_conv4 = conv_relu(h_conv3, [3, 3, arch[2], arch[3]], [arch[3]])
             h_pool4 = max_pool_2x2(h_conv4)
             keep_prob2 = tf.placeholder(tf.float32, shape=[])
             h_drop4 = tf.nn.dropout(h_pool4, keep_prob2)
@@ -196,11 +197,11 @@ for arch in architectures:
 
         #######Layer 5
         with tf.variable_scope("layer5"):
-            h_conv5 = conv_relu(h_drop4, [3, 3, 128, 128], [128])
+            h_conv5 = conv_relu(h_drop4, [3, 3, arch[3], arch[4]], [arch[4]])
 
         #######Layer 6
         with tf.variable_scope("layer6"):
-            h_conv6 = conv_relu(h_conv5, [3, 3, 128, 128], [128])
+            h_conv6 = conv_relu(h_conv5, [3, 3, arch[4], arch[5]], [arch[5]])
 
         flat_dim = int(h_conv6.get_shape()[1]*h_conv6.get_shape()[2]*h_conv6.get_shape()[3])
 
@@ -234,7 +235,7 @@ for arch in architectures:
     decay_step = decay_steps(base, total_iter, starter_learning_rate, final_learning_rate)
     print("Decay step: " + str(decay_step))
     learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
-                                               decay_step, base, staircase=False)
+                                               decay_step, base, staircase=True)
     
     optimizer = tf.train.AdamOptimizer(learning_rate)
 
