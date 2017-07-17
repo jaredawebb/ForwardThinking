@@ -316,10 +316,8 @@ for arch in architectures:
                 global_train_step.run(feed_dict=feed_dict)
                 
             elif technique == 2:
-                if epoch_number == 0:
-                    train_steps[0].run(feed_dict=feed_dict)
-                elif epoch_number == 1:
-                    train_steps[1].run(feed_dict=feed_dict)
+                if epoch_number < len(train_steps):
+                    train_steps[epoch_number].run(feed_dict=feed_dict)
                 else:
                     train_steps[-1].run(feed_dict=feed_dict)
             elif technique == 3:
