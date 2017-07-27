@@ -255,6 +255,22 @@ for arch in architectures:
                                                   y_: batch[1],
                                                   keep_prob1:0.3,
                                                   keep_prob2:0.5})
+            elif technique == 5:
+                if epoch_number == 0:
+                    train_steps[-1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+                                                                                y_: batch[1],
+                                                                                keep_prob1:0.3,
+                                                                                keep_prob2:0.5})
+                elif epoch_number == 1:
+                    train_steps[1].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+                                                  y_: batch[1],
+                                                  keep_prob1:0.3,
+                                                  keep_prob2:0.5})
+                else:
+                    train_steps[0].run(feed_dict={x: batch[0].reshape((len(batch[0]),784)),
+                                                  y_: batch[1],
+                                                  keep_prob1:0.3,
+                                                  keep_prob2:0.5})
                 
         
         strings = ['gibbs_accuracies', 'backprop_accuracies', 'easy_fwd_accuracies', 'epoch_gibbs_accuracies',
