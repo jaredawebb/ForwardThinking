@@ -125,6 +125,7 @@ for arch in architectures:
 
     if len(arch) == 2:
         flat_dim = int(h_pool2.get_shape()[1]*h_pool2.get_shape()[2]*h_pool2.get_shape()[3])
+        print(flat_dim)
 
         #######Fully Connected Layer
         with tf.variable_scope("fullyconnected"):
@@ -134,6 +135,7 @@ for arch in architectures:
             keep_prob1 = tf.placeholder(tf.float32, shape=[])
             h_drop2 = tf.nn.dropout(h_pool2, keep_prob1)
 
+            print(h_drop2.get_shape())
             h_fc1 = full_relu(h_drop2, [flat_dim, 512])
 
             keep_prob2 = tf.placeholder(tf.float32, shape=[])
@@ -168,7 +170,7 @@ for arch in architectures:
             keep_prob2 = tf.placeholder(tf.float32, shape=[])
             h_drop4 = tf.nn.dropout(h_pool4, keep_prob2)
 
-            h_fc1 = full_relu(h_drop4, [flat_dim, 512])
+            h_fc1 = full_relu(h_drop4_flat, [flat_dim, 512])
 
             keep_prob3 = tf.placeholder(tf.float32, shape=[])
             h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob3)
