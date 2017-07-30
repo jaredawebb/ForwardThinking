@@ -103,7 +103,7 @@ print('Using Technique: ' + techniques[technique])
 #architectures = [[64, 64, 64, 64, 64, 64], [128, 128, 128, 128, 128, 128], [256, 256, 256, 256, 256, 256],
 #                 [512, 512, 512, 512, 512, 512]]
 
-architectures = [[64, 64], [64, 64, 64, 64], [128, 128], [128, 128, 128, 128],
+architectures = [[64, 64, 64, 64], [128, 128], [128, 128, 128, 128],
                  [256, 256], [256, 256, 256, 256], [512, 512], [512, 512, 512, 512]]
 
 for arch in architectures:
@@ -168,7 +168,7 @@ for arch in architectures:
             keep_prob2 = tf.placeholder(tf.float32, shape=[])
             h_drop4 = tf.nn.dropout(h_pool4, keep_prob2)
 
-            h_fc1 = full_relu(h_drop4_flat, [flat_dim, 512])
+            h_fc1 = full_relu(h_drop4, [flat_dim, 512])
 
             keep_prob3 = tf.placeholder(tf.float32, shape=[])
             h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob3)
