@@ -166,7 +166,7 @@ for arch in architectures:
             h_pool4_flat = tf.reshape(h_pool4, [-1, flat_dim])
 
             keep_prob2 = tf.placeholder(tf.float32, shape=[])
-            h_drop4 = tf.nn.dropout(h_pool4, keep_prob2)
+            h_drop4 = tf.nn.dropout(h_pool4_flat, keep_prob2)
 
             h_fc1 = full_relu(h_drop4, [flat_dim, 512])
 
