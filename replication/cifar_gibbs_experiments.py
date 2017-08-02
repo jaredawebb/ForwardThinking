@@ -91,7 +91,7 @@ starter_learning_rate = 0.0001
 final_learning_rate = starter_learning_rate/100
 # 0 gibbs, 1 backprop
 technique = int(sys.argv[1])
-techniques = ['gibbs', 'backprop', 'easy_fwd', 'epoch_gibbs', 'backprop_primed_gibbs']
+techniques = ['gibbs', 'backprop', 'easy_fwd', 'epoch_gibbs', 'backprop_primed_gibbs', 'backwards_thinking']
 print('Using Technique: ' + techniques[technique])
 
 #architectures = [[64, 64], [128, 64], [128, 128], [256, 128], [256, 256], [512, 256], [512, 512],
@@ -103,8 +103,10 @@ print('Using Technique: ' + techniques[technique])
 #architectures = [[64, 64, 64, 64, 64, 64], [128, 128, 128, 128, 128, 128], [256, 256, 256, 256, 256, 256],
 #                 [512, 512, 512, 512, 512, 512]]
 
-architectures = [[64, 64, 64, 64], [128, 128], [128, 128, 128, 128],
-                 [256, 256], [256, 256, 256, 256], [512, 512], [512, 512, 512, 512]]
+#architectures = [[64, 64, 64, 64], [128, 128], [128, 128, 128, 128],
+#                 [256, 256], [256, 256, 256, 256], [512, 512], [512, 512, 512, 512]]
+
+architectures = [[32, 16], [32,32,16,16],[32,32],[32,32,32,32],[64,32],[64,64,32,32],[64,64,64,64]]
 
 for arch in architectures:
 
@@ -241,13 +243,13 @@ for arch in architectures:
     
     optimizer = tf.train.AdamOptimizer(learning_rate)
 
-    train_steps = [optimizer.minimize(cross_entropy,
-                                      var_list=train_vars[i] + train_vars[-2] + train_vars[-1],
-                                      global_step=global_step) for i in range(len(layers)-2)]
-    
     #train_steps = [optimizer.minimize(cross_entropy,
-    #                                  var_list=train_vars[i] + train_vars[-1],
-    #                                  global_step=global_step) for i in range(len(layers)-1)]
+    #                                  var_list=train_vars[i] + train_vars[-2] + train_vars[-1],
+    #                                  global_step=global_step) for i in range(len(layers)-2)]
+    
+    train_steps = [optimizer.minimize(cross_entropy,
+                                      var_list=train_vars[i] + train_vars[-1],
+                                      global_step=global_step) for i in range(len(layers)-1)]
     
     global_train_step = optimizer.minimize(cross_entropy, global_step=global_step)    
     
@@ -328,7 +330,12 @@ for arch in architectures:
                 if epoch_number < 5:
                     global_train_step.run(feed_dict=feed_dict)
                 else:
-                    train_steps[i % len(train_steps)].run(feed_dict=feed_dict)                    
+                    train_steps[i % len(train_steps)].run(feed_dict=feed_dict)
+            elif technique == 5:
+                if epoch_number < len(train_steps):
+                    train_steps[-epoch_number].run(feed_dict=feed_dict)
+                else:
+                    train_steps[0].run(feed_dict=feed_dict)
                 
         title_string = './cifar_exp_results/slow_decay_' + techniques[technique] + '_accuracies'
         for size in arch:
