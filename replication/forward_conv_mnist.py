@@ -24,7 +24,7 @@ weights = []
 train_accuracies = []
 forward_accuracies = []
 epoch_iter = 1100
-epoch_sequence = [1,1,1]
+epoch_sequence = [1,1,5]
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
@@ -106,8 +106,6 @@ x = tf.placeholder(tf.float32, shape=[None, 784])
 y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
 x_image = tf.reshape(x, [-1,28,28,1])
-
-print(weights)
 
 W_conv1 = tf.constant(weights[0][0])#weight_variable([3, 3, 1, 256])
 b_conv1 = tf.constant(weights[0][1])
